@@ -1,2 +1,7 @@
-# sp500
-S&amp;P 500 scrapper
+# S&P500 scrapper
+
+Scrapper S&P500 historial stock price (daily) using Alpha Vantage API
+
+Note: 
+The free version only allows  5 API calls per minute with maximium 500 calls per day.  
+Use multiple keys to work around the daily limit
