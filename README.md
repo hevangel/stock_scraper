@@ -1,4 +1,7 @@
-# S&P500 scrapper
+# Stock scraper
+
+Scrap stock data from the web
+
 
 Scrapper S&P500 historial stock price (daily) using Alpha Vantage API
 
