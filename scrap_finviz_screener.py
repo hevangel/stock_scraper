@@ -11,7 +11,7 @@ import time
 import sys
 
 finviz_url = 'https://finviz.com/screener.ashx?v=111&f=cap_smallover'
-output_file_prefix = 'finviz_'
+output_file_prefix = 'data_finviz/finviz_'
 
 def get_url(url):
     response = requests.get(url)
