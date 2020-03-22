@@ -1,0 +1,5 @@
+requests
+pandas
+bs4
+lxml
+junit-xml
