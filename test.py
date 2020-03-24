@@ -1,3 +1,5 @@
+# test program
+
 from junit_xml import TestSuite, TestCase
 
 print('hello')
