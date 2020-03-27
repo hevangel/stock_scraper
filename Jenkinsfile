@@ -8,7 +8,7 @@ pipeline {
         stage('build') {
             steps {
                 sh 'echo $ENV_VAR1 $ENV_VAR2'
-                sh 'python --version'
+                sh 'python3 scrap_finviz_screener.py'
             }
         }
         stage('test') {
@@ -17,17 +17,17 @@ pipeline {
                 sh 'python3 test.py'
             }
         }
-        stage('deploy') {
-            steps {
-                input 'Does the stage ok?'
-            }
-        }
+        //stage('deploy') {
+        //    steps {
+        //        input 'Does the stage ok?'
+        //    }
+        //}
     }
     post {
         always {
             echo 'This will always run'
             archiveArtifacts artifacts: 'data_finviz/*', fingerprint: true
-            juint 'output.xml'
+            junit 'output.xml'
         }
         success {
             echo 'This will run only if successful'
