@@ -8,7 +8,7 @@ pipeline {
         stage('build') {
             steps {
                 sh 'echo $BUILD_TIMESTAMP'
-                #sh 'python3 scrap_finviz_screener.py'
+                // sh 'python3 scrap_finviz_screener.py'
             }
         }
         stage('test') {
