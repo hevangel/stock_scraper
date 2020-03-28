@@ -19,7 +19,6 @@ def get_url(url):
         print('Error', response.url, '-response code:', response.status_code)
     return response.text
 
-
 def get_stock_table(page):
     print('getting page', page)
     page_url = finviz_url + '=&r=' + str((page - 1) * 20 + 1)

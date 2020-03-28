@@ -26,7 +26,7 @@ pipeline {
     post {
         always {
             echo 'This will always run'
-            archiveArtifacts artifacts: 'data_finviz/${BUILD_TIMESTAMP}*', fingerprint: true
+            archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
             junit 'output.xml'
         }
         success {
