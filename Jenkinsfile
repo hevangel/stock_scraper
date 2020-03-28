@@ -7,8 +7,8 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'echo $ENV_VAR1 $ENV_VAR2'
-                sh 'python3 scrap_finviz_screener.py'
+                sh 'echo $BUILD_TIMESTAMP'
+                #sh 'python3 scrap_finviz_screener.py'
             }
         }
         stage('test') {
@@ -26,7 +26,7 @@ pipeline {
     post {
         always {
             echo 'This will always run'
-            archiveArtifacts artifacts: 'data_finviz/*', fingerprint: true
+            archiveArtifacts artifacts: 'data_finviz/${BUILD_TIMESTAMP}*', fingerprint: true
             junit 'output.xml'
         }
         success {
