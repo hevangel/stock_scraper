@@ -8,7 +8,7 @@ pipeline {
         stage('build') {
             steps {
                 sh 'echo $BUILD_TIMESTAMP'
-                // sh 'python3 scrap_finviz_screener.py'
+                sh 'python3 scrap_finviz_screener.py'
             }
         }
         stage('test') {
@@ -17,11 +17,11 @@ pipeline {
                 sh 'python3 test.py'
             }
         }
-        //stage('deploy') {
-        //    steps {
-        //        input 'Does the stage ok?'
-        //    }
-        //}
+        stage('deploy') {
+            steps {
+                sh 'echo "commit daily CSV file"'
+            }
+        }
     }
     post {
         always {
