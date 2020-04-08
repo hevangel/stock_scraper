@@ -7,27 +7,27 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'echo $BUILD_TIMESTAMP'
                 sh 'python3 scrap_finviz_screener.py'
             }
         }
         stage('test') {
             steps {
-                sh 'echo "hello world"'
                 sh 'python3 test.py'
+                archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
+                junit 'output.xml'
             }
         }
         stage('deploy') {
             steps {
-                sh 'echo "commit daily CSV file"'
+                sh 'git add -A'
+                sh 'git commit -am "check in"'
+                sh 'git push origin HEAD:master'
             }
         }
     }
     post {
         always {
             echo 'This will always run'
-            archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
-            junit 'output.xml'
         }
         success {
             echo 'This will run only if successful'

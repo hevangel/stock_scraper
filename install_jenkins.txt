@@ -1,0 +1,16 @@
+# Install PIP, Java and Jenkins
+wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo update
+sudo upgrade
+sudo apt install python3-pip openjdk-11-jre-headless jenkins
+
+# Set server time zone
+#sudo timedatectl set-timezone America/Vancouver
+
+# Change Jenkins port
+#sudo sed -i "s/HTTP_PORT=8080/HTTP_PORT=9000/" /etc/default/jenkins
+
+# Restart Jenkins
+sudo service jenkins restart
+
