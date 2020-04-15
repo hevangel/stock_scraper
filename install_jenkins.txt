@@ -1,12 +1,12 @@
 # Install PIP, Java and Jenkins
 wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
 sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
-sudo update
-sudo upgrade
+sudo apt update
+sudo apt upgrade
 sudo apt install python3-pip openjdk-11-jre-headless jenkins
 
 # Set server time zone
-#sudo timedatectl set-timezone America/Vancouver
+sudo timedatectl set-timezone America/Vancouver
 
 # Change Jenkins port
 #sudo sed -i "s/HTTP_PORT=8080/HTTP_PORT=9000/" /etc/default/jenkins
@@ -14,3 +14,19 @@ sudo apt install python3-pip openjdk-11-jre-headless jenkins
 # Restart Jenkins
 sudo service jenkins restart
 
+# Ubuntu open port 8080 in iptables
+sudo apt-get install iptables-persistent
+sudo iptables -I INPUT -p tcp --dport 8080 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+sudo iptables -I OUTPUT -p tcp --sport 8080 -m conntrack --ctstate ESTABLISHED -j ACCEPT
+sudo iptables-save |sudo tee /etc/iptables/rules.v4
+
+# Install Jenkins plug-ins
+Build Timestamp
+Blue Ocean
+
+# Ngnix Setup
+sudo apt-get install nginx
+sudo iptables -I INPUT -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+sudo iptables -I OUTPUT -p tcp --sport 80 -m conntrack --ctstate ESTABLISHED -j ACCEPT
+sudo iptables -I INPUT -p tcp --dport 443 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+sudo iptables -I OUTPUT -p tcp --sport 443 -m conntrack --ctstate ESTABLISHED -j ACCEPT
