@@ -1,19 +1,19 @@
 pipeline {
     agent any
-    environment {
-        ENV_VAR1 = 'Horace'
-        ENV_VAR2 = 'Chan'
-    }
     stages {
         stage('build') {
             steps {
-                sh 'python3 scrap_finviz_screener.py'
+                sh 'python3 -m venv --system-site-packages python_venv'
+                withPythonEnv("${WORKSPACE}/python_venv/") {
+                    sh 'pip3 install -r requirements.txt'
+                    sh 'python3 scrap_finviz_screener.py'
+                }
             }
         }
         stage('test') {
             steps {
-                sh 'python3 test.py'
                 archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
+                sh 'python3 test.py'
                 junit 'output.xml'
             }
         }
@@ -21,7 +21,9 @@ pipeline {
             steps {
                 sh 'git add -A'
                 sh 'git commit -am "check in"'
-                sh 'git push origin HEAD:master'
+                sshagent (['git-jenkins.hevangel.com']) {
+                    sh 'git push origin HEAD:master'
+                }
             }
         }
     }
