@@ -3,7 +3,7 @@ wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
 sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo apt update
 sudo apt upgrade
-sudo apt install python3-pip openjdk-11-jre-headless jenkins
+sudo apt install python3-pip python3-venv openjdk-11-jre-headless jenkins
 
 # Set server time zone
 sudo timedatectl set-timezone America/Vancouver
@@ -20,9 +20,14 @@ sudo iptables -I INPUT -p tcp --dport 8080 -m conntrack --ctstate NEW,ESTABLISHE
 sudo iptables -I OUTPUT -p tcp --sport 8080 -m conntrack --ctstate ESTABLISHED -j ACCEPT
 sudo iptables-save |sudo tee /etc/iptables/rules.v4
 
+# Setup timezone
+sudo timedatectl set-timezone America/Vancouver
+
 # Install Jenkins plug-ins
 Build Timestamp
 Blue Ocean
+Pyenv
+SSH Agent
 
 # Ngnix Setup
 sudo apt-get install nginx
