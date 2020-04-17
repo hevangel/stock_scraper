@@ -13,8 +13,8 @@ pipeline {
         stage('test') {
             steps {
                 archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
-                sh 'python3 test.py'
-                junit 'output.xml'
+                // sh 'python3 test.py'
+                // junit 'output.xml'
             }
         }
         stage('deploy') {
