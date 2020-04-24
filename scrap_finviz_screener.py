@@ -20,8 +20,8 @@ def get_url(url):
     return response.text
 
 def get_stock_table(page):
-    print('getting page', page)
     page_url = finviz_url + '=&r=' + str((page - 1) * 20 + 1)
+    print('getting page', page, 'url:', page_url)
     page = get_url(page_url)
     soup = bs4.BeautifulSoup(page, 'lxml')
     stock_table = soup.find_all('table')[16]
