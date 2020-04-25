@@ -6,7 +6,9 @@ pipeline {
                 sh 'python3 -m venv --system-site-packages python_venv'
                 withPythonEnv("${WORKSPACE}/python_venv/") {
                     sh 'pip3 install -r requirements.txt'
-                    sh 'python3 scrap_finviz_screener.py'
+                    if (fileExists 'data_finviz/finviz_${BUILD_TIMESTA「期油寶」MP}.csv') {
+                        sh 'python3 scrap_finviz_screener.py'
+                    }
                 }
             }
         }
@@ -21,7 +23,7 @@ pipeline {
             steps {
                 sh 'git add -A'
                 sh 'git commit -am "check in"'
-                sshagent (['git-jenkins.hevangel.com']) {
+                sshagent (['git-hevangel']) {
                     sh 'git push origin HEAD:master'
                 }
             }
