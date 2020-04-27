@@ -2,19 +2,20 @@
 
 import requests
 import bs4
-import lxml
 import pandas as pd
 import argparse
-import urllib.parse as up
 import datetime
 import time
 import sys
+from io import StringIO
+from finviz.screener import Screener
 
+# -----------------------------------------------------------------
+# hand crafted scrapper
+# -----------------------------------------------------------------
 finviz_url = 'https://finviz.com/screener.ashx?v=111&f=cap_smallover'
-output_file_prefix = 'data_finviz/finviz_'
-
 def get_url(url):
-    response = requests.get(url)
+    response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
     if not response:
         print('Error', response.url, '-response code:', response.status_code)
     return response.text
@@ -27,7 +28,7 @@ def get_stock_table(page):
     stock_table = soup.find_all('table')[16]
     return pd.read_html(str(stock_table), header=0, index_col=1)[0]
 
-def main():
+def scrap_finviz():
     # get the front page
     front_page = get_url(finviz_url)
 
@@ -37,19 +38,50 @@ def main():
     last_page = int(screener_pages[-1].text)
     print('total pages:', last_page)
 
-    df_pages = [] 
-    today = str(datetime.date.today())
+    df_pages = []
 
     for i in range(1,last_page+1):
+        time.sleep(1)
         df_pages.append(get_stock_table(i))
     df_merged = pd.concat(df_pages)
-    df_merged.drop(columns=['No.'])
-    df_merged.insert(0, 'Date', today, True)
 
-    # write to 
-    filename = output_file_prefix + today + '.csv'
-    df_merged.to_csv(filename)
-    print('write', filename)
+    return df_merged
+
+def main():
+    parser = argparse.ArgumentParser(description='scrap finviz screener')
+    parser.add_argument('-output_prefix', type=str, default='data_finviz/finviz_', help='prefix of the output file')
+    parser.add_argument('-use_bs4_scrapper', action='store_true', help='Use my old bs4 scraper')
+    parser.add_argument('-no_scrap', action='store_true', help='No scrapping, read existing csv file')
+    args = parser.parse_args()
+    args.use_bs4_scrapper = True
+
+    today = str(datetime.date.today())
+    with open('market_close_dates.txt', 'r') as reader:
+        market_close_dates = reader.read().splitlines()
+    if today in market_close_dates:
+        print('The market is closed today')
+        return
+
+    filename = args.output_prefix + today + '.csv'
+
+    # scrap the data
+    if args.no_scrap:
+        df = pd.read_csv(filename)
+    else:
+        if args.use_bs4_scrapper:
+            # use my old code
+            df = scrap_finviz()
+        else:
+            # use the finviz package
+            stock_list = Screener(filters=['cap_smallover'])
+            df = pd.read_csv(StringIO(stock_list.to_csv()))
+
+        df.drop(columns=['No.'], inplace=True)
+        df.insert(0, 'Date', today, True)
+
+        df.to_csv(filename)
+
+    # generate report
 
 if __name__ == "__main__":
     sys.exit(main())

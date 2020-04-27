@@ -20,9 +20,6 @@ sudo iptables -I INPUT -p tcp --dport 8080 -m conntrack --ctstate NEW,ESTABLISHE
 sudo iptables -I OUTPUT -p tcp --sport 8080 -m conntrack --ctstate ESTABLISHED -j ACCEPT
 sudo iptables-save |sudo tee /etc/iptables/rules.v4
 
-# Setup timezone
-sudo timedatectl set-timezone America/Vancouver
-
 # Install Jenkins plug-ins
 Build Timestamp
 Blue Ocean
