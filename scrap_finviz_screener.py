@@ -50,19 +50,18 @@ def scrap_finviz():
 def main():
     parser = argparse.ArgumentParser(description='scrap finviz screener')
     parser.add_argument('-output_prefix', type=str, default='data_finviz/finviz_', help='prefix of the output file')
-    parser.add_argument('-use_bs4_scrapper', action='store_true', help='Use my old bs4 scraper')
+    parser.add_argument('-use_bs4_scrapper', type=bool, default=True, help='Use my old bs4 scraper')
     parser.add_argument('-no_scrap', action='store_true', help='No scrapping, read existing csv file')
+    parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
     args = parser.parse_args()
-    args.use_bs4_scrapper = True
 
-    today = str(datetime.date.today())
     with open('market_close_dates.txt', 'r') as reader:
         market_close_dates = reader.read().splitlines()
-    if today in market_close_dates:
+    if args.date in market_close_dates:
         print('The market is closed today')
         return
 
-    filename = args.output_prefix + today + '.csv'
+    filename = args.output_prefix + args.date + '.csv'
 
     # scrap the data
     if args.no_scrap:
@@ -77,7 +76,7 @@ def main():
             df = pd.read_csv(StringIO(stock_list.to_csv()))
 
         df.drop(columns=['No.'], inplace=True)
-        df.insert(0, 'Date', today, True)
+        df.insert(0, 'Date', args.date, True)
 
         df.to_csv(filename)
 

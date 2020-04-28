@@ -20,7 +20,7 @@ pipeline {
         stage('deploy') {
             steps {
                 sh 'git add -A'
-                // sh 'git commit -am "check in"'
+                sh 'git commit -am "check in"'
                 sshagent (['git-hevangel']) {
                     sh 'git push origin HEAD:master'
                 }
