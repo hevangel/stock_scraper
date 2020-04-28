@@ -9,6 +9,7 @@ import time
 import sys
 from io import StringIO
 from finviz.screener import Screener
+from junit_xml import TestSuite, TestCase
 
 # -----------------------------------------------------------------
 # hand crafted scrapper
@@ -53,7 +54,10 @@ def main():
     parser.add_argument('-use_bs4_scrapper', type=bool, default=True, help='Use my old bs4 scraper')
     parser.add_argument('-no_scrap', action='store_true', help='No scrapping, read existing csv file')
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
+    parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
     args = parser.parse_args()
+    args.no_scrap = True
+    args.date = '2020-04-27'
 
     with open('market_close_dates.txt', 'r') as reader:
         market_close_dates = reader.read().splitlines()
@@ -77,10 +81,32 @@ def main():
 
         df.drop(columns=['No.'], inplace=True)
         df.insert(0, 'Date', args.date, True)
-
         df.to_csv(filename)
 
     # generate report
+    ts_list = []
+    df.set_index('Ticker', inplace=True)
+    for sector in df.Sector.unique():
+        ts = TestSuite(name=sector)
+        df_sector = df[df['Sector'] == sector]
+        for industry in df_sector.Industry.unique():
+            for index, row in df_sector[df_sector['Industry'] == industry].iterrows():
+                if row['Market Cap'].find('B') > 0:
+                    tc = TestCase(classname=industry,
+                                  name=row.index,
+                                  elapsed_sec=row['Price'],
+                                  stdout=row['Change'],
+                                  stderr=row['Market Cap'])
+                    if row['Change'].find('-'):
+                        tc.add_error_info(message='lower')
+                    ts.test_cases.append(tc)
+        ts_list.append(ts)
+
+    # pretty printing is on by default but can be disabled using prettyprint=False
+    #print(TestSuite.to_xml_string(ts_list))
+
+    with open(args.report, 'w') as f:
+        TestSuite.to_file(f, ts_list, prettyprint=True)
 
 if __name__ == "__main__":
     sys.exit(main())

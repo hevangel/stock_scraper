@@ -13,14 +13,13 @@ pipeline {
         stage('test') {
             steps {
                 archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
-                // sh 'python3 test.py'
-                // junit 'output.xml'
+                junit 'daily_report.xml'
             }
         }
         stage('deploy') {
             steps {
-                sh 'git add -A'
-                sh 'git commit -am "check in"'
+                sh 'git add data_finviz/finviz_${BUILD_TIMESTAMP}.csv'
+                sh 'git commit --allow-empty -a -m "check in"'
                 sshagent (['git-hevangel']) {
                     sh 'git push origin HEAD:master'
                 }
