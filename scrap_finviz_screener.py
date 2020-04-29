@@ -22,7 +22,7 @@ def get_url(url):
     return response.text
 
 def get_stock_table(page):
-    page_url = finviz_url + '=&r=' + str((page - 1) * 20 + 1)
+    page_url = finviz_url + '&r=' + str((page - 1) * 20 + 1)
     print('getting page', page, 'url:', page_url)
     page = get_url(page_url)
     soup = bs4.BeautifulSoup(page, 'lxml')
@@ -57,7 +57,7 @@ def main():
     parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
     args = parser.parse_args()
     #args.no_scrap = True
-    #args.date = '2020-04-27'
+    args.date = '2020-04-28'
 
     with open('market_close_dates.txt', 'r') as reader:
         market_close_dates = reader.read().splitlines()
