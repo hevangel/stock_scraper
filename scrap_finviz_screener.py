@@ -56,7 +56,7 @@ def main():
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
     parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
     args = parser.parse_args()
-    #args.no_scrap = True
+    args.no_scrap = True
 
     with open('market_close_dates.txt', 'r') as reader:
         market_close_dates = reader.read().splitlines()
@@ -83,29 +83,29 @@ def main():
         df.to_csv(filename)
 
     # generate report
-    #ts_list = []
-    #df.set_index('Ticker', inplace=True)
-    #for sector in df.Sector.unique():
-    #    ts = TestSuite(name=sector)
-    #    df_sector = df[df['Sector'] == sector]
-    #    for industry in df_sector.Industry.unique():
-    #        for index, row in df_sector[df_sector['Industry'] == industry].iterrows():
-    #            if row['Market Cap'].find('B') > 0:
-    #                tc = TestCase(classname=industry,
-    #                              name=row.index,
-    #                              elapsed_sec=row['Price'],
-    #                              stdout=row['Change'],
-    #                              stderr=row['Market Cap'])
-    #                if row['Change'].find('-'):
-    #                    tc.add_error_info(message='lower')
-    #                ts.test_cases.append(tc)
-    #    ts_list.append(ts)
+    ts_list = []
+    df.set_index('Ticker', inplace=True)
+    for sector in df.Sector.unique():
+        ts = TestSuite(name=sector)
+        df_sector = df[df['Sector'] == sector]
+        for industry in df_sector.Industry.unique():
+            for ticker in df.index[df['Industry'] == industry]:
+                if df.loc[ticker,'Market Cap'].find('B') > 0:
+                    tc = TestCase(classname=industry,
+                                  name=ticker,
+                                  elapsed_sec=df.loc[ticker,'Price'],
+                                  stdout=df.loc[ticker,'Change'],
+                                  stderr=df.loc[ticker,'Market Cap'])
+                    if df.loc[ticker,'Change'].find('-'):
+                        tc.add_error_info(message='lower')
+                    ts.test_cases.append(tc)
+        ts_list.append(ts)
 
     # pretty printing is on by default but can be disabled using prettyprint=False
     #print(TestSuite.to_xml_string(ts_list))
 
-    #with open(args.report, 'w') as f:
-    #    TestSuite.to_file(f, ts_list, prettyprint=True)
+    with open(args.report, 'w') as f:
+        TestSuite.to_file(f, ts_list, prettyprint=True)
 
 if __name__ == "__main__":
     sys.exit(main())
