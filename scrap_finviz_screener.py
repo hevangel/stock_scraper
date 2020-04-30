@@ -57,7 +57,6 @@ def main():
     parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
     args = parser.parse_args()
     #args.no_scrap = True
-    args.date = '2020-04-28'
 
     with open('market_close_dates.txt', 'r') as reader:
         market_close_dates = reader.read().splitlines()
