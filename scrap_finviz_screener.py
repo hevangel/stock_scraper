@@ -22,7 +22,7 @@ def get_url(url):
     return response.text
 
 def get_stock_table(page):
-    page_url = finviz_url + '=&r=' + str((page - 1) * 20 + 1)
+    page_url = finviz_url + '&r=' + str((page - 1) * 20 + 1)
     print('getting page', page, 'url:', page_url)
     page = get_url(page_url)
     soup = bs4.BeautifulSoup(page, 'lxml')
@@ -88,14 +88,14 @@ def main():
         ts = TestSuite(name=sector)
         df_sector = df[df['Sector'] == sector]
         for industry in df_sector.Industry.unique():
-            for index, row in df_sector[df_sector['Industry'] == industry].iterrows():
-                if row['Market Cap'].find('B') > 0:
+            for ticker in df.index[df['Industry'] == industry]:
+                if df.loc[ticker,'Market Cap'].find('B') > 0:
                     tc = TestCase(classname=industry,
-                                  name=row.index,
-                                  elapsed_sec=row['Price'],
-                                  stdout=row['Change'],
-                                  stderr=row['Market Cap'])
-                    if row['Change'].find('-'):
+                                  name=ticker,
+                                  elapsed_sec=df.loc[ticker,'Price'],
+                                  stdout=df.loc[ticker,'Change'],
+                                  stderr=df.loc[ticker,'Market Cap'])
+                    if df.loc[ticker,'Change'].find('-'):
                         tc.add_error_info(message='lower')
                     ts.test_cases.append(tc)
         ts_list.append(ts)

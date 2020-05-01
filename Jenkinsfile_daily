@@ -12,8 +12,8 @@ pipeline {
         }
         stage('test') {
             steps {
-                junit 'daily_report.xml'
                 archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
+                junit 'daily_report.xml'
             }
         }
         stage('deploy') {
