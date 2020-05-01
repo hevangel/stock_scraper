@@ -6,14 +6,14 @@ pipeline {
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt'
-                    sh 'python3 scrap_finviz_screener.py'
+                    sh 'python3 scrap_finviz_screener.py -no_scrap'
                 }
             }
         }
         stage('test') {
             steps {
                 archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
-                //junit 'daily_report.xml'
+                junit 'daily_report.xml'
             }
         }
         stage('deploy') {
