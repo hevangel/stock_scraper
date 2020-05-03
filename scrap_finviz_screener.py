@@ -42,6 +42,7 @@ def scrap_finviz():
     df_pages = []
 
     for i in range(1,last_page+1):
+    for i in range(1,2):
         time.sleep(1)
         df_pages.append(get_stock_table(i))
     df_merged = pd.concat(df_pages)
@@ -56,6 +57,7 @@ def main():
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
     parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
     args = parser.parse_args()
+    args.date = '2020-05-01'
 
     with open('market_close_dates.txt', 'r') as reader:
         market_close_dates = reader.read().splitlines()
@@ -81,7 +83,10 @@ def main():
         df.insert(0, 'Date', args.date, True)
         df.to_csv(filename)
 
+    print(df)
+
     # generate report
+    df = pd.read_csv(filename)
     ts_list = []
     df.set_index('Ticker', inplace=True)
     for sector in df.Sector.unique():
