@@ -40,9 +40,7 @@ def scrap_finviz():
     print('total pages:', last_page)
 
     df_pages = []
-
     for i in range(1,last_page+1):
-    for i in range(1,2):
         time.sleep(1)
         df_pages.append(get_stock_table(i))
     df_merged = pd.concat(df_pages)
@@ -57,6 +55,7 @@ def main():
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
     parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
     args = parser.parse_args()
+    args.no_scrap = True
     args.date = '2020-05-01'
 
     with open('market_close_dates.txt', 'r') as reader:
@@ -68,9 +67,7 @@ def main():
     filename = args.output_prefix + args.date + '.csv'
 
     # scrap the data
-    if args.no_scrap:
-        df = pd.read_csv(filename)
-    else:
+    if not args.no_scrap:
         if args.use_bs4_scrapper:
             # use my old code
             df = scrap_finviz()
@@ -83,33 +80,31 @@ def main():
         df.insert(0, 'Date', args.date, True)
         df.to_csv(filename)
 
-    print(df)
-
     # generate report
-    #df = pd.read_csv(filename)
-    #ts_list = []
-    #df.set_index('Ticker', inplace=True)
-    #for sector in df.Sector.unique():
-    #    ts = TestSuite(name=sector)
-    #    df_sector = df[df['Sector'] == sector]
-    #    for industry in df_sector.Industry.unique():
-    #        for ticker in df.index[df['Industry'] == industry]:
-    #            if df.loc[ticker,'Market Cap'].find('B') > 0:
-    #                tc = TestCase(classname=industry,
-    #                              name=ticker,
-    #                              elapsed_sec=df.loc[ticker,'Price'],
-    #                              stdout=df.loc[ticker,'Change'],
-    #                              stderr=df.loc[ticker,'Market Cap'])
-    #                if df.loc[ticker,'Change'].find('-'):
-    #                    tc.add_error_info(message='lower')
-    #                ts.test_cases.append(tc)
-    #    ts_list.append(ts)
+    df = pd.read_csv(filename)
+    ts_list = []
+    df.set_index('Ticker', inplace=True)
+    for sector in df.Sector.unique():
+        ts = TestSuite(name=sector)
+        df_sector = df[df['Sector'] == sector]
+        for industry in df_sector.Industry.unique():
+            for ticker in df.index[df['Industry'] == industry]:
+                if df.loc[ticker,'Market Cap'].find('B') > 0:
+                    tc = TestCase(classname=industry,
+                                  name=ticker,
+                                  elapsed_sec=df.loc[ticker,'Price'],
+                                  stdout=df.loc[ticker,'Change'],
+                                  stderr=df.loc[ticker,'Market Cap'])
+                    if df.loc[ticker,'Change'].find('-'):
+                        tc.add_error_info(message='lower')
+                    ts.test_cases.append(tc)
+        ts_list.append(ts)
 
     # pretty printing is on by default but can be disabled using prettyprint=False
-    #print(TestSuite.to_xml_string(ts_list))
+    print(TestSuite.to_xml_string(ts_list))
 
-    #with open(args.report, 'w') as f:
-    #    TestSuite.to_file(f, ts_list, prettyprint=True)
+    with open(args.report, 'w') as f:
+        TestSuite.to_file(f, ts_list, prettyprint=True)
 
 if __name__ == "__main__":
     sys.exit(main())
