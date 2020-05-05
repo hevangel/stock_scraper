@@ -99,7 +99,7 @@ def main():
         ts_list.append(ts)
 
     # pretty printing is on by default but can be disabled using prettyprint=False
-    print(TestSuite.to_xml_string(ts_list))
+    #print(TestSuite.to_xml_string(ts_list))
 
     with open(args.report, 'w') as f:
         TestSuite.to_file(f, ts_list, prettyprint=True)
