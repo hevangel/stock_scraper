@@ -4,3 +4,4 @@ bs4
 lxml
 junit-xml
 finviz
+fredapi

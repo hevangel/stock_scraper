@@ -19,7 +19,7 @@ pipeline {
         //stage('test') {
         //    steps {
         //        archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
-        //        junit 'daily_report.xml'
+        //        junit 'weekly_report.xml'
         //    }
         //}
         stage('deploy') {
