@@ -55,6 +55,7 @@ def main():
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
     parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
     args = parser.parse_args()
+    args.no_scrap = True
 
     # check is the market closed today
     with open('market_close_dates.txt', 'r') as reader:
@@ -94,7 +95,7 @@ def main():
                                   elapsed_sec=df.loc[ticker,'Price'],
                                   stdout=df.loc[ticker,'Change'],
                                   stderr=df.loc[ticker,'Market Cap'])
-                    if df.loc[ticker,'Change'].find('-') > 0:
+                    if df.loc[ticker,'Change'].find('-') >= 0:
                         tc.add_error_info(message='lower')
                     ts.test_cases.append(tc)
         ts_list.append(ts)
