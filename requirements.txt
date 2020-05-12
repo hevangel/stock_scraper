@@ -5,3 +5,5 @@ lxml
 junit-xml
 finviz
 fredapi
+yfinance
+pandas-datareader
