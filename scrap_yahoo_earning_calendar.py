@@ -21,11 +21,6 @@ def main():
     parser.add_argument('-today', type=str, default=str(datetime.date.today()), help='Specify today date')
     args = parser.parse_args()
 
-    args = pd.DataFrame()
-    args.today = '2020-05-11'
-    args.input = 'earnings2.csv'
-    args.output_prefix = 'earnings_estimate_'
-
     today = datetime.datetime.fromisoformat(args.today)
     df_input = pd.read_csv(args.input)
     df_input.set_index('Ticker', inplace=True)
@@ -45,12 +40,15 @@ def main():
             else:
                 next_earnings_date = yf_calendar.at['Earnings Date','Value']
                 print(f"{ticker} next earnings at {next_earnings_date.date()}")
-                if next_earnings_date >= onDay(today,0) and next_earnings_date <= onDay(today,4):
+                next_monday = onDay(today,0)
+                next_friday = onDay(next_monday,4)
+                if next_earnings_date >= next_monday and next_earnings_date <= next_friday:
                     new_row = yf_calendar.T
                     new_row.insert(1, 'Ticker', ticker)
                     new_row.insert(2, 'Report', df_input.at[ticker,'Report'])
                     df_output = df_output.append(new_row)
 
+    df_output.reset_index(drop=True, inplace=True)
     df_output.sort_values(by=['Earnings Date', 'Ticker'], inplace=True)
     print(df_output)
     df_output.to_csv(args.output_prefix + str(onDay(today,0).date()) + '.csv', index=False)
