@@ -1,0 +1,38 @@
+Series ID,Description
+WALCL,Total Assets,
+SWPT,Central Bank Liquidity Swaps,
+TREAS10Y,US Treasury 10 Years,
+TREAS1T5,US Treasury 1 to 5 Years,
+TREAS5T10,US Treasury 5 to 10 Years,
+TREAS911Y,US Treasury 91 days to 1 Year,
+TREAS1590,US Treasury 15 to 90 days,
+TREAS15,US Treasury 15 days,
+REP15,Repurchase Agreements 15 days,
+REP1690,Repurchase Agreements 16 to 90 days,
+RESPPALGUOXCH1NWW,Change from previous week level,
+FEDFUNDS,Effective Federal Funds Rate,
+TB3MS,3-Month Treasury Yield,
+TB1YR,1-Year Treasury Yield,
+TB4WK,4-Week Treasury Yield,
+DTB6,6-Month Treasury Yield,
+VIXCLS,COBE Volatility Index VIX,
+VXVCLS,COBE S&P 500 3-Month Volatility Index,
+VXDCLS,COBE DJIA Volatility Index,
+VXNCLS,COBE NASDAQ 100 Volatility Index,
+GVZCLS,COBE Gold ETF Volatility Index,
+VXSLVCLS,COBE Silver ETF Volatility Index,
+VXGDXCLS,COBE GOld Miners ETF Volatility Index,
+GOLDPMGBD228NLBM,Gold Fixing Price in London Bullion Market,
+SLVPRUSD,Silver Fixing Price in London Bullion Market,
+RECPROUSM156N,Smoothed US Recession Probabilities,
+USRECD,NBER based Recession Indicators Peak through Trough
+CPIAUCSL,CPI for Urban Consumers
+UNRATE,Unemployment Rate
+PAYEMS,All Employees Total Nonfram
+ICSA,Weekly Initial Claims
+GDP,Gross Domestic Product
+SP500,S&P 500
+DJIA,Dow Jones Industrial Average
+NASDAQCOM,NASDAQ Composite Index
+NASDAQ100,NASDAQ 100
+

@@ -16,7 +16,7 @@ def onDay(date, day):
 
 def main():
     parser = argparse.ArgumentParser(description='scrap yahoo earning')
-    parser.add_argument('-input', type=str, default='earnings.csv', help='input file')
+    parser.add_argument('-input', type=str, default='data_tickers/earnings.csv', help='input file')
     parser.add_argument('-output_prefix', type=str, default='data_yahoo_earnings_estimate/earnings_estimate_', help='output file')
     parser.add_argument('-today', type=str, default=str(datetime.date.today()), help='Specify today date')
     args = parser.parse_args()
