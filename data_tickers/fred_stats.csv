@@ -22,12 +22,15 @@ VXNCLS,COBE NASDAQ 100 Volatility Index,
 GVZCLS,COBE Gold ETF Volatility Index,
 VXSLVCLS,COBE Silver ETF Volatility Index,
 VXGDXCLS,COBE GOld Miners ETF Volatility Index,
-GOLDPMGBD228NLBM,Gold Fixing Price in London Bullion Market,
+GOLDAMGBD228NLBM,Gold Fixing Price in London Bullion Market AM,
+GOLDPMGBD228NLBM,Gold Fixing Price in London Bullion Market PM,
 SLVPRUSD,Silver Fixing Price in London Bullion Market,
 RECPROUSM156N,Smoothed US Recession Probabilities,
 USRECD,NBER based Recession Indicators Peak through Trough
 CPIAUCSL,CPI for Urban Consumers
 UNRATE,Unemployment Rate
+EMRATIO,Employment-Population Ratio
+UNEMPLOY,Unemployment Level
 PAYEMS,All Employees Total Nonfram
 ICSA,Weekly Initial Claims
 GDP,Gross Domestic Product
