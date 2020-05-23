@@ -13,7 +13,7 @@ pipeline {
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt'
-                    //sh 'python3 scrap_yahoo_earning_calendar.py'
+                    sh 'python3 scrap_yahoo_earning_calendar.py'
                     sh 'python3 scrap_yahoo_history.py'
                 }
             }
