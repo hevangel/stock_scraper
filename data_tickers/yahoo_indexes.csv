@@ -1,4 +1,4 @@
-Symbol,Description
+Ticker,Description
 ^SPX,S&P 500
 ^DJI,Dow Jones Industrial Average
 ^IXIC,NASDAQ Composite
@@ -21,6 +21,11 @@ Symbol,Description
 ^STOXX50E,STXE 50
 ^STOXX,STXE 600
 
+
+^FVX,Treasury Yield 5 Years
+^TNX,Treasury Yield 10 Years
+^TYX,Treasury Yield 30 Years
+
 ^VIX,CBOE Volatility Index
 ^VVIX,CBOE VIX Volatility Index
 ^GVZ,CBOE Gold Volatility Index
@@ -31,7 +36,11 @@ CL=F,Cruide Oil Future
 BZ=F,Brent Crude Oil Future
 GC=F,Gold Future
 SI=F,Silver Future
-ZW=F,Wheat Futures
+PA=F,Palladium Future
+HG=F,Copper Future
+ZW=F,Wheat Future
+ZC=F,Corn Future
+ZS=F,Soybean Future
 
 CAD=X,USD/CAD
 CNY=X,USD/CNY
