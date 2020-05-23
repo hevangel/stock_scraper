@@ -5,14 +5,23 @@ import argparse
 import datetime
 import sys
 import yfinance as yf
+import glob
+import os
 
 def main():
     parser = argparse.ArgumentParser(description='scrap yahoo earning')
-    parser.add_argument('-input', type=str, default='data_tickers/yahoo_indexes.csv', help='input file')
+    parser.add_argument('-input_dir', type=str, help='input directory, use the latest file')
+    parser.add_argument('-input_file', type=str, default='data_tickers/yahoo_indexes.csv', help='input file')
     parser.add_argument('-output_dir', type=str, default='data_yahoo_history/', help='output directory')
     args = parser.parse_args()
 
-    df_input = pd.read_csv(args.input)
+    if args.input_dir is not None:
+        list_of_files = glob.glob(args.input_dir + '/*')
+        input_file = max(list_of_files, key=os.path.getctime)
+    else:
+        input_file = args.input_file
+
+    df_input = pd.read_csv(input_file)
     df_input.set_index('Ticker', inplace=True)
     df_output = pd.DataFrame()
 
