@@ -13,8 +13,8 @@ pipeline {
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt'
-                    #sh 'python3 scrap_yahoo_earning_calendar.py'
-                    #sh 'python3 scrap_yahoo_history.py'
+                    // sh 'python3 scrap_yahoo_earning_calendar.py'
+                    // sh 'python3 scrap_yahoo_history.py'
                     sh 'python3 scrap_yahoo_history.py -input_dir data_finviz'
                 }
             }
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 sh 'git add data_yahoo_earnings_estimate/*.csv'
                 sh 'git add data_yahoo_history/*.csv'
-                sh 'git commit --allow-empty -a -m "check in"'
+                sh 'git commit --allow-empty -a -m "update scrapped data"'
                 sshagent (['git-hevangel']) {
                     sh 'git push origin HEAD:master'
                 }
