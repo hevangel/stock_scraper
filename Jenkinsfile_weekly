@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    triggers {
+        cron('H 0 * * 6')
+    }
+    stages {
+        stage('build') {
+            environment {
+                FRED_API_KEY = credentials('fred-api-key')
+            }
+            steps {
+                sh 'python3 -m venv --system-site-packages venv'
+                withPythonEnv("${WORKSPACE}/venv/") {
+                    sh 'pip3 install -r requirements.txt'
+                    sh 'python3 scrap_yahoo_earning_calendar.py'
+                }
+            }
+        }
+        //stage('test') {
+        //    steps {
+        //        archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
+        //        junit 'weekly_report.xml'
+        //    }
+        //}
+        stage('deploy') {
+            steps {
+                sh 'git add data_yahoo_earnings_estimate/*.csv'
+                sh 'git commit --allow-empty -a -m "check in"'
+                sshagent (['git-hevangel']) {
+                    sh 'git push origin HEAD:master'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'This will always run'
+        }
+        success {
+            echo 'This will run only if successful'
+        }
+        failure {
+            echo 'This will run only if failed'
+        }
+        unstable {
+            echo 'This will run only if the run was marked as unstable'
+        }
+        changed {
+            echo 'This will run only if the state of the Pipeline has changed'
+            echo 'For example, if the Pipeline was previously failing but is now successful'
+        }
+    }
+}
