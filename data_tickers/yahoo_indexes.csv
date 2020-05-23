@@ -1,26 +1,20 @@
 Ticker,Description
-^SPX,S&P 500
+^GSPC,S&P 500
 ^DJI,Dow Jones Industrial Average
 ^IXIC,NASDAQ Composite
-^IXF,NASDAQ Financial 100
-^SP400,S&P MidCap 400
-^SP600,S&P SmallCap 600
 ^RUT,Russell 2000
 ^RUA,Russell 3000
 ^GSPTSE,S&P/TSX Composite Index
 ^FTSE,FTSE Index
 ^HSI,Hang Seng Index
 ^SSEC,Shanghai Index
-^SHSZ300,Shenzhen Index
 ^N225,Nikkei 225
-^KOSPI,S.Korea Index
 ^STI,Singapore Index
 ^MXX,IPC Mexico
 ^GDAXI,DAX Performance Index
 ^SPEUP,S&P Europe 350
 ^STOXX50E,STXE 50
 ^STOXX,STXE 600
-
 
 ^FVX,Treasury Yield 5 Years
 ^TNX,Treasury Yield 10 Years
