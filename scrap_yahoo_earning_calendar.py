@@ -24,7 +24,7 @@ def main():
     if args.today is None:
         today = datetime.date.today()
     else:
-        today = datetime.datetime.fromisoformat(args.today)
+        today = datetime.datetime.fromisoformat(args.today).date()
     df_input = pd.read_csv(args.input)
     df_input.set_index('Ticker', inplace=True)
     df_output = pd.DataFrame()
@@ -54,7 +54,7 @@ def main():
     df_output.reset_index(drop=True, inplace=True)
     df_output.sort_values(by=['Earnings Date', 'Ticker'], inplace=True)
     print(df_output)
-    df_output.to_csv(args.output_prefix + str(onDay(today,0).date()) + '.csv', index=False)
+    df_output.to_csv(args.output_prefix + str(onDay(today,0)) + '.csv', index=False)
 
 if __name__ == "__main__":
     sys.exit(main())
