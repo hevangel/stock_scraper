@@ -18,10 +18,13 @@ def main():
     parser = argparse.ArgumentParser(description='scrap yahoo earning')
     parser.add_argument('-input', type=str, default='data_tickers/earnings.csv', help='input file')
     parser.add_argument('-output_prefix', type=str, default='data_yahoo_earnings_estimate/earnings_estimate_', help='output file')
-    parser.add_argument('-today', type=str, default=str(datetime.date.today()), help='Specify today date')
+    parser.add_argument('-today', type=str, help='Specify today date')
     args = parser.parse_args()
 
-    today = datetime.datetime.fromisoformat(args.today)
+    if args.today is None:
+        today = datetime.date.today()
+    else:
+        today = datetime.datetime.fromisoformat(args.today).date()
     df_input = pd.read_csv(args.input)
     df_input.set_index('Ticker', inplace=True)
     df_output = pd.DataFrame()
@@ -51,7 +54,7 @@ def main():
     df_output.reset_index(drop=True, inplace=True)
     df_output.sort_values(by=['Earnings Date', 'Ticker'], inplace=True)
     print(df_output)
-    df_output.to_csv(args.output_prefix + str(onDay(today,0).date()) + '.csv', index=False)
+    df_output.to_csv(args.output_prefix + str(onDay(today,0)) + '.csv', index=False)
 
 if __name__ == "__main__":
     sys.exit(main())

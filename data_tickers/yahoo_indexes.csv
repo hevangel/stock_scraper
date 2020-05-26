@@ -1,0 +1,45 @@
+Ticker,Description
+^GSPC,S&P 500
+^DJI,Dow Jones Industrial Average
+^IXIC,NASDAQ Composite
+^RUT,Russell 2000
+^RUA,Russell 3000
+^GSPTSE,S&P/TSX Composite Index
+^FTSE,FTSE Index
+^HSI,Hang Seng Index
+^SSEC,Shanghai Index
+^N225,Nikkei 225
+^STI,Singapore Index
+^MXX,IPC Mexico
+^GDAXI,DAX Performance Index
+^SPEUP,S&P Europe 350
+^STOXX50E,STXE 50
+^STOXX,STXE 600
+
+^FVX,Treasury Yield 5 Years
+^TNX,Treasury Yield 10 Years
+^TYX,Treasury Yield 30 Years
+
+^VIX,CBOE Volatility Index
+^VVIX,CBOE VIX Volatility Index
+^GVZ,CBOE Gold Volatility Index
+^OVX,CBOE Crude Oil Volatility Index
+
+ES=F,S&P 500 Future
+CL=F,Cruide Oil Future
+BZ=F,Brent Crude Oil Future
+GC=F,Gold Future
+SI=F,Silver Future
+PA=F,Palladium Future
+HG=F,Copper Future
+ZW=F,Wheat Future
+ZC=F,Corn Future
+ZS=F,Soybean Future
+
+CAD=X,USD/CAD
+CNY=X,USD/CNY
+EUR=X,USD/EUR
+JPY=X,USD/JPY
+HKD=X,USD/HKD
+BTC-USD,Bitcoin USD
+
