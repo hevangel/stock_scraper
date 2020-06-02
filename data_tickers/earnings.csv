@@ -1,8 +1,6 @@
 Ticker,Report
-SPY,before
 LEVI,after
 WDFC,after
-SPY,before
 JPM,before
 WFC,before
 JNJ,before
@@ -13,7 +11,6 @@ MS,before
 ABT,before
 BLK,before
 ISRG,before
-SPY,before
 IBM,after
 HAL,before
 PM,before
@@ -42,7 +39,6 @@ MMM,before
 AXP,before
 VZ,before
 AAL,before
-SPY,before
 AVT,after
 NXPI,after
 SOHU,before
@@ -92,7 +88,6 @@ DISH,before
 HON,before
 CVX,before
 DISCA,before
-SPY,before
 CAR,after
 RCL,before
 CRUS,after
@@ -130,7 +125,6 @@ ROKU,after
 VIACA,before
 HLT,before
 SEAS,before
-SPY,before
 ON,before
 AVYA,before
 UAA,before
@@ -164,7 +158,6 @@ BABA,before
 NVDA,after
 NET,after
 EXPE,after
-SPY,before
 A,after
 TIVO,after
 WMT,before
@@ -192,7 +185,6 @@ WDAY,after
 IQ,after
 VMW,after
 W,before
-SPY,before
 WIFI,after
 BNED,before
 HPE,after
@@ -204,7 +196,6 @@ DLTR,before
 HRB,after
 IDT,after
 COST,after
-SPY,before
 BBW,before
 AVGO,after
 ORCL,after
@@ -216,7 +207,6 @@ NIO,before
 MOMO,before
 DOYU,before
 TIF,before
-SPY,before
 NKE,after
 MU,after
 LULU,after
@@ -231,3 +221,4 @@ HTHT,after
 WB,after
 SINA,before
 YY,before
+PLD,after
