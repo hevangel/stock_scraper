@@ -9,7 +9,7 @@ import yfinance as yf
 def onDay(date, day):
     """
     :param date: current date
-    :param day: next monday(0) - sunday(7)
+    :param day: next monday(0) - sunday(6)
     :return:
     """
     return date + datetime.timedelta(days=(day-date.weekday()+7)%7)
@@ -25,6 +25,8 @@ def main():
         today = datetime.date.today()
     else:
         today = datetime.datetime.fromisoformat(args.today).date()
+    next_monday = onDay(today, 0)
+    next_friday = onDay(next_monday, 4)
     df_input = pd.read_csv(args.input)
     df_input.set_index('Ticker', inplace=True)
     df_output = pd.DataFrame()
@@ -43,8 +45,6 @@ def main():
             else:
                 next_earnings_date = yf_calendar.at['Earnings Date','Value']
                 print(f"{ticker} next earnings at {next_earnings_date.date()}")
-                next_monday = onDay(today,0)
-                next_friday = onDay(next_monday,4)
                 if next_earnings_date >= next_monday and next_earnings_date <= next_friday:
                     new_row = yf_calendar.T
                     new_row.insert(1, 'Ticker', ticker)
