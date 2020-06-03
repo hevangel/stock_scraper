@@ -188,6 +188,7 @@ W,before
 WIFI,after
 BNED,before
 HPE,after
+HPQ,after
 TGT,before
 JWN,after
 ZM,after
@@ -223,3 +224,4 @@ YY,before
 WORK,after
 CIEN,after
 FSOL,before
+PLD,after
