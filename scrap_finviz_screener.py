@@ -14,24 +14,26 @@ from junit_xml import TestSuite, TestCase
 # -----------------------------------------------------------------
 # hand crafted scrapper
 # -----------------------------------------------------------------
-finviz_url = 'https://finviz.com/screener.ashx?v=111&f=cap_smallover'
+finviz_url = 'https://finviz.com/screener.ashx?'
+scrap_delay = 1
+
 def get_url(url):
     response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
     if not response:
         print('Error', response.url, '-response code:', response.status_code)
     return response.text
 
-def get_stock_table(page):
-    page_url = finviz_url + '&r=' + str((page - 1) * 20 + 1)
+def get_stock_table(tab,filter,page):
+    page_url = finviz_url + tab + filter + '&r=' + str((page - 1) * 20 + 1)
     print('getting page', page, 'url:', page_url)
     page = get_url(page_url)
     soup = bs4.BeautifulSoup(page, 'lxml')
     stock_table = soup.find_all('table')[16]
     return pd.read_html(str(stock_table), header=0, index_col=1)[0]
 
-def scrap_finviz():
+def scrap_finviz(filter):
     # get the front page
-    front_page = get_url(finviz_url)
+    front_page = get_url(finviz_url + filter)
 
     # get the last page
     soup = bs4.BeautifulSoup(front_page, 'lxml')
@@ -39,10 +41,14 @@ def scrap_finviz():
     last_page = int(screener_pages[-1].text)
     print('total pages:', last_page)
 
+    tab_list = ['v=111&', 'v=121&', 'v=131&', 'v=141&', 'v=161&', 'v=171&',]
     df_pages = []
     for i in range(1,last_page+1):
-        time.sleep(1)
-        df_pages.append(get_stock_table(i))
+        df_tabs = []
+        for tab in tab_list:
+            time.sleep(scrap_delay)
+            df_tabs.append(get_stock_table(tab,filter,i))
+        df_pages.append(pd.concat(df_tabs, axis=1))
     df_merged = pd.concat(df_pages)
 
     return df_merged
@@ -54,7 +60,11 @@ def main():
     parser.add_argument('-no_scrap', action='store_true', help='No scrapping, read existing csv file')
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
     parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
+    parser.add_argument('-filter', type=str, action='append', help='filters apply to the screener')
     args = parser.parse_args()
+
+    if args.filter is None:
+        args.filter = ['f=cap_microover', 'f=cap_microunder,sh_opt_option']
 
     # check is the market closed today
     with open('market_close_dates.txt', 'r') as reader:
@@ -69,10 +79,13 @@ def main():
     if not args.no_scrap:
         if args.use_bs4_scrapper:
             # use my old code
-            df = scrap_finviz()
+            df_filters = []
+            for filter in args.filter:
+                df_filters.append(scrap_finviz(filter))
+            df = pd.concat(df_filters)
         else:
             # use the finviz package
-            stock_list = Screener(filters=['cap_smallover'])
+            stock_list = Screener(filters=args.filter)
             df = pd.read_csv(StringIO(stock_list.to_csv()))
 
         df.drop(columns=['No.'], inplace=True)
