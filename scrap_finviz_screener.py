@@ -56,15 +56,25 @@ def scrap_finviz(filter, tab_list = None):
 
 def main():
     parser = argparse.ArgumentParser(description='scrap finviz screener')
+    parser.add_argument('-output', type=str, help='output file')
     parser.add_argument('-output_prefix', type=str, default='data_finviz/finviz_', help='prefix of the output file')
     parser.add_argument('-use_bs4_scrapper', type=bool, default=True, help='Use my old bs4 scraper')
     parser.add_argument('-no_scrap', action='store_true', help='No scrapping, read existing csv file')
+    parser.add_argument('-no_report', action='store_true', help='Do not generate XML report')
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
     parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
     parser.add_argument('-filter', type=str, action='append', help='filters apply to the screener')
     parser.add_argument('-tab', type=str, action='append', help='tabs to the scrap')
     parser.add_argument('-delay', type=int, help='delay in sec between each URL request')
+    parser.add_argument('-drop_col', type=str, action='append', default=[], help='remove columns')
     args = parser.parse_args()
+
+    args.output = 'data_tickers/dji.csv'
+    args.tab = ['v=111&']
+    args.filter = ['f=idx_dji']
+    args.drop_col = ['Market Cap', 'P/E', 'Price', 'Change', 'Volume']
+    args.delay = 5
+    args.no_report = True
 
     if args.filter is None:
         args.filter = ['f=cap_microover', 'f=cap_microunder,sh_opt_option']
@@ -79,7 +89,10 @@ def main():
         print('The market is closed today')
         return
 
-    filename = args.output_prefix + args.date + '.csv'
+    if args.output is None:
+        filename = args.output_prefix + args.date + '.csv'
+    else:
+        filename = args.output
 
     # scrap the data
     if not args.no_scrap:
@@ -94,35 +107,33 @@ def main():
             stock_list = Screener(filters=args.filter)
             df = pd.read_csv(StringIO(stock_list.to_csv()))
 
-        df.drop(columns=['No.'], inplace=True)
+        df.drop(columns=['No.']+args.drop_col, inplace=True)
         df.insert(0, 'Date', args.date, True)
         df.to_csv(filename)
 
     # generate report
-    df = pd.read_csv(filename)
-    ts_list = []
-    df.set_index('Ticker', inplace=True)
-    for sector in df.Sector.unique():
-        ts = TestSuite(name=sector)
-        df_sector = df[df['Sector'] == sector]
-        for industry in df_sector.Industry.unique():
-            for ticker in df.index[df['Industry'] == industry]:
-                if df.loc[ticker,'Market Cap'].find('B') > 0:
-                    tc = TestCase(classname=industry,
-                                  name=ticker,
-                                  elapsed_sec=df.loc[ticker,'Price'],
-                                  stdout=df.loc[ticker,'Change'],
-                                  stderr=df.loc[ticker,'Market Cap'])
-                    if df.loc[ticker,'Change'].find('-') >= 0:
-                        tc.add_error_info(message='lower')
-                    ts.test_cases.append(tc)
-        ts_list.append(ts)
+    if not args.no_report:
+        df = pd.read_csv(filename)
+        ts_list = []
+        df.set_index('Ticker', inplace=True)
+        for sector in df.Sector.unique():
+            ts = TestSuite(name=sector)
+            df_sector = df[df['Sector'] == sector]
+            for industry in df_sector.Industry.unique():
+                for ticker in df.index[df['Industry'] == industry]:
+                    if df.loc[ticker,'Market Cap'].find('B') > 0:
+                        tc = TestCase(classname=industry,
+                                      name=ticker,
+                                      elapsed_sec=df.loc[ticker,'Price'],
+                                      stdout=df.loc[ticker,'Change'],
+                                      stderr=df.loc[ticker,'Market Cap'])
+                        if df.loc[ticker,'Change'].find('-') >= 0:
+                            tc.add_error_info(message='lower')
+                        ts.test_cases.append(tc)
+            ts_list.append(ts)
 
-    # pretty printing is on by default but can be disabled using prettyprint=False
-    #print(TestSuite.to_xml_string(ts_list))
-
-    with open(args.report, 'w') as f:
-        TestSuite.to_file(f, ts_list, prettyprint=True)
+        with open(args.report, 'w') as f:
+            TestSuite.to_file(f, ts_list, prettyprint=True)
 
 if __name__ == "__main__":
     sys.exit(main())

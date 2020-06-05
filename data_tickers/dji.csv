@@ -1,0 +1,31 @@
+Ticker,Date,Company,Sector,Industry,Country
+AAPL,2020-06-04,Apple Inc.,Technology,Consumer Electronics,USA
+AXP,2020-06-04,American Express Company,Financial,Credit Services,USA
+BA,2020-06-04,The Boeing Company,Industrials,Aerospace & Defense,USA
+CAT,2020-06-04,Caterpillar Inc.,Industrials,Farm & Heavy Construction Machinery,USA
+CSCO,2020-06-04,"Cisco Systems, Inc.",Technology,Communication Equipment,USA
+CVX,2020-06-04,Chevron Corporation,Energy,Oil & Gas Integrated,USA
+DIS,2020-06-04,The Walt Disney Company,Communication Services,Entertainment,USA
+DOW,2020-06-04,Dow Inc.,Basic Materials,Chemicals,USA
+GS,2020-06-04,"The Goldman Sachs Group, Inc.",Financial,Capital Markets,USA
+HD,2020-06-04,"The Home Depot, Inc.",Consumer Cyclical,Home Improvement Retail,USA
+IBM,2020-06-04,International Business Machines Corporation,Technology,Information Technology Services,USA
+INTC,2020-06-04,Intel Corporation,Technology,Semiconductors,USA
+JNJ,2020-06-04,Johnson & Johnson,Healthcare,Drug Manufacturers - General,USA
+JPM,2020-06-04,JPMorgan Chase & Co.,Financial,Banks - Diversified,USA
+KO,2020-06-04,The Coca-Cola Company,Consumer Defensive,Beverages - Non-Alcoholic,USA
+MCD,2020-06-04,McDonald's Corporation,Consumer Cyclical,Restaurants,USA
+MMM,2020-06-04,3M Company,Industrials,Specialty Industrial Machinery,USA
+MRK,2020-06-04,"Merck & Co., Inc.",Healthcare,Drug Manufacturers - General,USA
+MSFT,2020-06-04,Microsoft Corporation,Technology,Software - Infrastructure,USA
+NKE,2020-06-04,"NIKE, Inc.",Consumer Cyclical,Footwear & Accessories,USA
+PFE,2020-06-04,Pfizer Inc.,Healthcare,Drug Manufacturers - General,USA
+PG,2020-06-04,The Procter & Gamble Company,Consumer Defensive,Household & Personal Products,USA
+RTX,2020-06-04,Raytheon Technologies Corporation,Industrials,Aerospace & Defense,USA
+TRV,2020-06-04,"The Travelers Companies, Inc.",Financial,Insurance - Property & Casualty,USA
+UNH,2020-06-04,UnitedHealth Group Incorporated,Healthcare,Healthcare Plans,USA
+V,2020-06-04,Visa Inc.,Financial,Credit Services,USA
+VZ,2020-06-04,Verizon Communications Inc.,Communication Services,Telecom Services,USA
+WBA,2020-06-04,"Walgreens Boots Alliance, Inc.",Healthcare,Pharmaceutical Retailers,USA
+WMT,2020-06-04,Walmart Inc.,Consumer Defensive,Discount Stores,USA
+XOM,2020-06-04,Exxon Mobil Corporation,Energy,Oil & Gas Integrated,USA
