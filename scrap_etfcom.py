@@ -7,31 +7,34 @@ import argparse
 import datetime
 import time
 import sys
-from io import StringIO
-from finviz.screener import Screener
-from junit_xml import TestSuite, TestCase
 
 # -----------------------------------------------------------------
 # hand crafted scrapper
 # -----------------------------------------------------------------
-finviz_url = 'https://finviz.com/screener.ashx?'
+eftfundflow_url = 'https://www.etf.com/etfanalytics/etf-fund-flows-tool'
 scrap_delay = 1
 
-def get_url(url):
-    response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+def post_url(url,data):
+    response = requests.post(url, data=data, headers={'User-Agent': 'Mozilla/5.0'})
+
+
     if not response:
         print('Error', response.url, '-response code:', response.status_code)
     return response.text
 
-def get_stock_table(tab,filter,page):
-    page_url = finviz_url + tab + filter + '&r=' + str((page - 1) * 20 + 1)
-    print('getting page', page, 'url:', page_url)
-    page = get_url(page_url)
-    soup = bs4.BeautifulSoup(page, 'lxml')
-    stock_table = soup.find_all('table')[16]
-    return pd.read_html(str(stock_table), header=0, index_col=1)[0]
+def get_etf_table(state_date,end_date):
+    page_url = eftfundflow_url
+    data = {'startDate[date]' : '2015-01-01', 'endDate[date]' : '2015-12-31'}
 
-def scrap_finviz(filter, tab_list = None):
+    page = post_url(page_url, data)
+    soup = bs4.BeautifulSoup(page, 'lxml')
+
+    etf_table = soup.find_all('table')
+    df = pd.concat(pd.read_html(str(etf_table), header=0, index_col=1))
+    df.drop(columns=['Details'], inplace=True)
+    return df
+
+def scrap_finviz(filter):
     # get the front page
     front_page = get_url(finviz_url + filter)
 
@@ -41,8 +44,7 @@ def scrap_finviz(filter, tab_list = None):
     last_page = int(screener_pages[-1].text)
     print('total pages:', last_page)
 
-    if tab_list is None:
-        tab_list = ['v=111&', 'v=121&', 'v=131&', 'v=141&', 'v=161&', 'v=171&',]
+    tab_list = ['v=111&', 'v=121&', 'v=131&', 'v=141&', 'v=161&', 'v=171&',]
     df_pages = []
     for i in range(1,last_page+1):
         df_tabs = []
@@ -57,20 +59,17 @@ def scrap_finviz(filter, tab_list = None):
 def main():
     parser = argparse.ArgumentParser(description='scrap finviz screener')
     parser.add_argument('-output_prefix', type=str, default='data_finviz/finviz_', help='prefix of the output file')
-    parser.add_argument('-use_bs4_scrapper', type=bool, default=True, help='Use my old bs4 scraper')
     parser.add_argument('-no_scrap', action='store_true', help='No scrapping, read existing csv file')
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
     parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
     parser.add_argument('-filter', type=str, action='append', help='filters apply to the screener')
-    parser.add_argument('-tab', type=str, action='append', help='tabs to the scrap')
-    parser.add_argument('-delay', type=int, help='delay in sec between each URL request')
     args = parser.parse_args()
+
+    page = get_url(eftfundflow_url)
+    soup = bs4.BeautifulSoup(page, 'lxml')
 
     if args.filter is None:
         args.filter = ['f=cap_microover', 'f=cap_microunder,sh_opt_option']
-    if args.delay is not None:
-        global scrap_delay
-        scrap_delay = args.delay
 
     # check is the market closed today
     with open('market_close_dates.txt', 'r') as reader:
@@ -87,7 +86,7 @@ def main():
             # use my old code
             df_filters = []
             for filter in args.filter:
-                df_filters.append(scrap_finviz(filter, args.tab))
+                df_filters.append(scrap_finviz(filter))
             df = pd.concat(df_filters)
         else:
             # use the finviz package
@@ -98,31 +97,6 @@ def main():
         df.insert(0, 'Date', args.date, True)
         df.to_csv(filename)
 
-    # generate report
-    df = pd.read_csv(filename)
-    ts_list = []
-    df.set_index('Ticker', inplace=True)
-    for sector in df.Sector.unique():
-        ts = TestSuite(name=sector)
-        df_sector = df[df['Sector'] == sector]
-        for industry in df_sector.Industry.unique():
-            for ticker in df.index[df['Industry'] == industry]:
-                if df.loc[ticker,'Market Cap'].find('B') > 0:
-                    tc = TestCase(classname=industry,
-                                  name=ticker,
-                                  elapsed_sec=df.loc[ticker,'Price'],
-                                  stdout=df.loc[ticker,'Change'],
-                                  stderr=df.loc[ticker,'Market Cap'])
-                    if df.loc[ticker,'Change'].find('-') >= 0:
-                        tc.add_error_info(message='lower')
-                    ts.test_cases.append(tc)
-        ts_list.append(ts)
-
-    # pretty printing is on by default but can be disabled using prettyprint=False
-    #print(TestSuite.to_xml_string(ts_list))
-
-    with open(args.report, 'w') as f:
-        TestSuite.to_file(f, ts_list, prettyprint=True)
 
 if __name__ == "__main__":
     sys.exit(main())
