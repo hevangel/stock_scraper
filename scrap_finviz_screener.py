@@ -69,13 +69,6 @@ def main():
     parser.add_argument('-drop_col', type=str, action='append', default=[], help='remove columns')
     args = parser.parse_args()
 
-    args.output = 'data_tickers/dji.csv'
-    args.tab = ['v=111&']
-    args.filter = ['f=idx_dji']
-    args.drop_col = ['Market Cap', 'P/E', 'Price', 'Change', 'Volume']
-    args.delay = 5
-    args.no_report = True
-
     if args.filter is None:
         args.filter = ['f=cap_microover', 'f=cap_microunder,sh_opt_option']
     if args.delay is not None:
