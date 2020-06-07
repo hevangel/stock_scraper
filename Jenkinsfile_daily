@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh 'git add data_finviz/finviz_2020-06-04.csv'
                 sh 'git add data_finviz/finviz_2020-06-05.csv'
-                #sh 'git add data_finviz/finviz_${BUILD_TIMESTAMP}.csv'
+                //sh 'git add data_finviz/finviz_${BUILD_TIMESTAMP}.csv'
                 sh 'git commit --allow-empty -a -m "check in"'
                 sshagent (['git-hevangel']) {
                     sh 'git push origin HEAD:master'
