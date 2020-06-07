@@ -16,8 +16,6 @@ scrap_delay = 1
 
 def post_url(url,data):
     response = requests.post(url, data=data, headers={'User-Agent': 'Mozilla/5.0'})
-
-
     if not response:
         print('Error', response.url, '-response code:', response.status_code)
     return response.text
@@ -64,9 +62,6 @@ def main():
     parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
     parser.add_argument('-filter', type=str, action='append', help='filters apply to the screener')
     args = parser.parse_args()
-
-    page = get_url(eftfundflow_url)
-    soup = bs4.BeautifulSoup(page, 'lxml')
 
     if args.filter is None:
         args.filter = ['f=cap_microover', 'f=cap_microunder,sh_opt_option']
