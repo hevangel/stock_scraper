@@ -69,6 +69,9 @@ def main():
     parser.add_argument('-drop_col', type=str, action='append', default=[], help='remove columns')
     args = parser.parse_args()
 
+    args.date = '2020-06-04'
+    args.no_scrap = True
+
     if args.filter is None:
         args.filter = ['f=cap_microover', 'f=cap_microunder,sh_opt_option']
     if args.delay is not None:
@@ -100,6 +103,8 @@ def main():
             stock_list = Screener(filters=args.filter)
             df = pd.read_csv(StringIO(stock_list.to_csv()))
 
+        df = df.loc[:, ~df.columns.duplicated()]
+        df.drop_duplicates(subset='Ticker',inplace=True)
         df.drop(columns=['No.']+args.drop_col, inplace=True)
         df.insert(0, 'Date', args.date, True)
         df.to_csv(filename)
@@ -107,13 +112,15 @@ def main():
     # generate report
     if not args.no_report:
         df = pd.read_csv(filename)
-        ts_list = []
+        df.drop_duplicates(subset='Ticker',inplace=True)
         df.set_index('Ticker', inplace=True)
+        ts_list = []
         for sector in df.Sector.unique():
             ts = TestSuite(name=sector)
             df_sector = df[df['Sector'] == sector]
             for industry in df_sector.Industry.unique():
                 for ticker in df.index[df['Industry'] == industry]:
+                    print(sector,'-',industry,'-',ticker)
                     if df.loc[ticker,'Market Cap'].find('B') > 0:
                         tc = TestCase(classname=industry,
                                       name=ticker,
