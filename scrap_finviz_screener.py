@@ -69,7 +69,7 @@ def main():
     parser.add_argument('-drop_col', type=str, action='append', default=[], help='remove columns')
     args = parser.parse_args()
 
-    args.date = '2020-06-04'
+    args.date = '2020-06-05'
     args.no_scrap = True
 
     if args.filter is None:
