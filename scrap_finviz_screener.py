@@ -100,6 +100,9 @@ def main():
             stock_list = Screener(filters=args.filter)
             df = pd.read_csv(StringIO(stock_list.to_csv()))
 
+        # save temp file
+        df.to_csv(filename)
+
         df = df.loc[:, ~df.columns.duplicated()]
         df.set_index('Ticker', inplace=True)
         df = df.loc[~df.index.duplicated()]
