@@ -103,9 +103,7 @@ def main():
         # save temp file
         df.to_csv(filename)
 
-        df = df.loc[:, ~df.columns.duplicated()]
-        df.set_index('Ticker', inplace=True)
-        df = df.loc[~df.index.duplicated()]
+        df = df.loc[~df.index.duplicated(), ~df.columns.duplicated()]
         df.drop(columns=['No.']+args.drop_col, inplace=True)
         df.insert(0, 'Date', args.date, True)
         df.to_csv(filename)
