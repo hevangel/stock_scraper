@@ -101,7 +101,8 @@ def main():
             df = pd.read_csv(StringIO(stock_list.to_csv()))
 
         df = df.loc[:, ~df.columns.duplicated()]
-        df.drop_duplicates(subset='Ticker',inplace=True)
+        df.set_index('Ticker', inplace=True)
+        df = df.loc[~df.index.duplicated()]
         df.drop(columns=['No.']+args.drop_col, inplace=True)
         df.insert(0, 'Date', args.date, True)
         df.to_csv(filename)
@@ -109,8 +110,8 @@ def main():
     # generate report
     if not args.no_report:
         df = pd.read_csv(filename)
-        df.drop_duplicates(subset='Ticker',inplace=True)
         df.set_index('Ticker', inplace=True)
+        df.drop_duplicates(inplace=True)
         ts_list = []
         for sector in df.Sector.unique():
             ts = TestSuite(name=sector)
