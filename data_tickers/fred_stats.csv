@@ -42,3 +42,6 @@ M2,M2 Money Stock
 M2V,Velocity of M2 Money Stock
 M1,M1 Money Stock
 M1V,Velocity of M1 Money Stock
+DFII5, 5-Year Treasury Inflation-Indexed Security, Constant Maturity
+DFII10, 10-Year Treasury Inflation-Indexed Security, Constant Maturity
+DFII30, 30-Year Treasury Inflation-Indexed Security, Constant Maturity
