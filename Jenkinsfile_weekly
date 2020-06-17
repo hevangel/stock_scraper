@@ -13,9 +13,10 @@ pipeline {
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt'
-                    sh 'python3 scrap_yahoo_earning_calendar.py'                    // get next week's earning calendar
-                    sh 'python3 scrap_yahoo_history.py'                             // get indexes
-                    sh 'python3 scrap_yahoo_history.py -input_dir data_finviz'      // get midcap+ stocks
+                    sh 'python3 scrap_yahoo_earning_calendar.py'                            // get next week's earning calendar
+                    sh 'python3 scrap_yahoo_history.py'                                     // get indexes
+                    sh 'python3 scrap_yahoo_history.py -input_file data_tickers/etf.csv'    // get etf
+                    sh 'python3 scrap_yahoo_history.py -input_dir data_finviz'              // get stocks
                 }
             }
         }
