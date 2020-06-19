@@ -44,3 +44,6 @@ M1,M1 Money Stock
 M1V,Velocity of M1 Money Stock
 WDTGAL,U.S. Treasury General Account
 WSHOMCB,Mortgage-Backed Securities
+DFII5, 5-Year Treasury Inflation-Indexed Security, Constant Maturity
+DFII10, 10-Year Treasury Inflation-Indexed Security, Constant Maturity
+DFII30, 30-Year Treasury Inflation-Indexed Security, Constant Maturity
