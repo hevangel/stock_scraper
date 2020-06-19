@@ -22,7 +22,8 @@ def main():
     df_pages = []
 
     driver.get('https://etfdb.com/screener')
-    while True:
+    #while True:
+    for i in range(2):
         print('scrap page', driver.find_element_by_css_selector("li[class='active page-number']").text)
         thead = driver.find_element_by_tag_name('thead')
         tbody = driver.find_element_by_tag_name('tbody')
