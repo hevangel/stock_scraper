@@ -33,8 +33,6 @@ def get_etf_fundflow_all_tickers(tickers, start_date, end_date):
 
     df_pages = []
     for page,tickers_page in enumerate(tickers_list):
-        if page > 2:
-            break
         print('scraping page', page)
         tickers = ','.join(tickers_page)
         df_pages.append(get_etf_fundflow_page(tickers,start_date,end_date))
