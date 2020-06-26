@@ -23,7 +23,7 @@ def get_etf_fundflow_page(tickers,start_date,end_date):
             'startDate[date]' : start_date,
             'endDate[date]' : end_date}
     page = post_url(page_url, data)
-    df = get_df_from_page(page, drop_columns=['Details'])
+    df = get_df_from_page(page, drop_columns=['Fund Name','Details'])
     time.sleep(scrap_delay)
     return df
 
