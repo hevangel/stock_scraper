@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import requests
 import bs4
+from scrap_utils import *
 
 # -----------------------------------------------------------------
 # hand crafted scrapper
@@ -17,17 +18,10 @@ import bs4
 etfdb_url = 'https://etfdb.com/etf/'
 scrap_delay = 5
 
-def get_url(url):
-    response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
-    if not response:
-        print('Error', response.url, '-response code:', response.status_code)
-        return None
-    time.sleep(scrap_delay)
-    return response.text
-
 def get_etf_info(ticker):
     page_url = etfdb_url + ticker
     page = get_url(page_url)
+    time.sleep(scrap_delay)
     if page is None:
         return None
     soup = bs4.BeautifulSoup(page, 'lxml')

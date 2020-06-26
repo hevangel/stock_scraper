@@ -1,97 +1,77 @@
 #!/usr/bin/env python
-
 import requests
 import bs4
 import pandas as pd
+from pandas.tseries.offsets import BDay
 import argparse
-import datetime
+from datetime import datetime, date, timedelta
 import time
 import sys
+import scrap_utils
+from scrap_utils import *
+scrap_utils.use_cloudscrapper = True
 
 # -----------------------------------------------------------------
 # hand crafted scrapper
 # -----------------------------------------------------------------
 eftfundflow_url = 'https://www.etf.com/etfanalytics/etf-fund-flows-tool'
-scrap_delay = 1
+scrap_delay = 5
 
-def post_url(url,data):
-    response = requests.post(url, data=data, headers={'User-Agent': 'Mozilla/5.0'})
-    if not response:
-        print('Error', response.url, '-response code:', response.status_code)
-    return response.text
-
-def get_etf_table(state_date,end_date):
+def get_etf_fundflow_page(tickers,start_date,end_date):
     page_url = eftfundflow_url
-    data = {'startDate[date]' : '2015-01-01', 'endDate[date]' : '2015-12-31'}
-
+    data = {'tickers' : tickers,
+            'startDate[date]' : start_date,
+            'endDate[date]' : end_date}
     page = post_url(page_url, data)
-    soup = bs4.BeautifulSoup(page, 'lxml')
-
-    etf_table = soup.find_all('table')
-    df = pd.concat(pd.read_html(str(etf_table), header=0, index_col=1))
-    df.drop(columns=['Details'], inplace=True)
+    df = get_df_from_page(page, drop_columns=['Details'])
+    time.sleep(scrap_delay)
     return df
 
-def scrap_finviz(filter):
-    # get the front page
-    front_page = get_url(finviz_url + filter)
+def get_etf_fundflow_all_tickers(tickers, start_date, end_date):
+    tickers_per_page = 100
+    tickers_list = [tickers[x:x + tickers_per_page] for x in range(0, len(tickers), tickers_per_page)]
 
-    # get the last page
-    soup = bs4.BeautifulSoup(front_page, 'lxml')
-    screener_pages = soup.find_all('a', {'class' : 'screener-pages'})
-    last_page = int(screener_pages[-1].text)
-    print('total pages:', last_page)
-
-    tab_list = ['v=111&', 'v=121&', 'v=131&', 'v=141&', 'v=161&', 'v=171&',]
     df_pages = []
-    for i in range(1,last_page+1):
-        df_tabs = []
-        for tab in tab_list:
-            time.sleep(scrap_delay)
-            df_tabs.append(get_stock_table(tab,filter,i))
-        df_pages.append(pd.concat(df_tabs, axis=1))
+    for page,tickers_page in enumerate(tickers_list):
+        if page > 2:
+            break
+        print('scraping page', page)
+        tickers = ','.join(tickers_page)
+        df_pages.append(get_etf_fundflow_page(tickers,start_date,end_date))
+
     df_merged = pd.concat(df_pages)
 
     return df_merged
 
 def main():
     parser = argparse.ArgumentParser(description='scrap finviz screener')
-    parser.add_argument('-output_prefix', type=str, default='data_finviz/finviz_', help='prefix of the output file')
-    parser.add_argument('-no_scrap', action='store_true', help='No scrapping, read existing csv file')
-    parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
-    parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
-    parser.add_argument('-filter', type=str, action='append', help='filters apply to the screener')
+    parser.add_argument('-input', type=str, default='data_tickers/etfs_info.csv', help='list of ETFs to scrap')
+    parser.add_argument('-output_prefix', type=str, default='data_etf_fundflow/etf_fund_flow_', help='prefix of the output file')
+    parser.add_argument('-date', type=str, help='Specify the date')
+    parser.add_argument('-start_date', type=str, help='Specify the start date')
+    parser.add_argument('-end_date', type=str, help='Specify the end date')
     args = parser.parse_args()
 
-    if args.filter is None:
-        args.filter = ['f=cap_microover', 'f=cap_microunder,sh_opt_option']
+    if args.date is None:
+        args.date = str((date.today() - BDay(1)).date())
+    if args.start_date is None:
+        args.start_date = args.date
+    if args.end_date is None:
+        args.end_date = args.date
 
-    # check is the market closed today
-    with open('market_close_dates.txt', 'r') as reader:
-        market_close_dates = reader.read().splitlines()
-    if args.date in market_close_dates:
-        print('The market is closed today')
-        return
+    df_etf_list = pd.read_csv(args.input)
+    tickers = df_etf_list['Ticker'].to_list()
+    df = get_etf_fundflow_all_tickers(tickers, args.start_date, args.end_date)
 
-    filename = args.output_prefix + args.date + '.csv'
-
-    # scrap the data
-    if not args.no_scrap:
-        if args.use_bs4_scrapper:
-            # use my old code
-            df_filters = []
-            for filter in args.filter:
-                df_filters.append(scrap_finviz(filter))
-            df = pd.concat(df_filters)
-        else:
-            # use the finviz package
-            stock_list = Screener(filters=args.filter)
-            df = pd.read_csv(StringIO(stock_list.to_csv()))
-
-        df.drop(columns=['No.'], inplace=True)
+    if args.start_date == args.end_date:
         df.insert(0, 'Date', args.date, True)
-        df.to_csv(filename)
+        filename = args.output_prefix + args.start_date + '.csv'
+    else:
+        df.insert(0, 'Start Date', args.start_date, True)
+        df.insert(0, 'End Date', args.end_date, True)
+        filename = args.output_prefix + args.start_date + '_' + args.end_date + '.csv'
 
+    df.to_csv(filename)
 
 if __name__ == "__main__":
     sys.exit(main())

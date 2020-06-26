@@ -7,3 +7,4 @@ finviz
 fredapi
 yfinance
 pandas-datareader
+cloudscraper
