@@ -10,18 +10,13 @@ import sys
 from io import StringIO
 from finviz.screener import Screener
 from junit_xml import TestSuite, TestCase
+from scrap_utils import *
 
 # -----------------------------------------------------------------
 # hand crafted scrapper
 # -----------------------------------------------------------------
 finviz_url = 'https://finviz.com/screener.ashx?'
 scrap_delay = 1
-
-def get_url(url):
-    response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
-    if not response:
-        print('Error', response.url, '-response code:', response.status_code)
-    return response.text
 
 def get_stock_table(tab,filter,page):
     page_url = finviz_url + tab + filter + '&r=' + str((page - 1) * 20 + 1)
@@ -76,9 +71,7 @@ def main():
         scrap_delay = args.delay
 
     # check is the market closed today
-    with open('market_close_dates.txt', 'r') as reader:
-        market_close_dates = reader.read().splitlines()
-    if args.date in market_close_dates:
+    if is_market_close(args.date):
         print('The market is closed today')
         return
 
