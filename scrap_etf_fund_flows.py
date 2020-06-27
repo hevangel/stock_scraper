@@ -44,7 +44,7 @@ def get_etf_fundflow_all_tickers(tickers, start_date, end_date):
 def main():
     parser = argparse.ArgumentParser(description='scrap finviz screener')
     parser.add_argument('-input', type=str, default='data_tickers/etfs_info.csv', help='list of ETFs to scrap')
-    parser.add_argument('-output_prefix', type=str, default='data_etf_fundflow/etf_fund_flow_', help='prefix of the output file')
+    parser.add_argument('-output_prefix', type=str, default='data_etf_fundflow/etf_fundflow_', help='prefix of the output file')
     parser.add_argument('-date', type=str, help='Specify the date')
     parser.add_argument('-start_date', type=str, help='Specify the start date')
     parser.add_argument('-end_date', type=str, help='Specify the end date')
