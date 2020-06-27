@@ -7,7 +7,7 @@ pipeline {
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install --upgrade pip'
                     sh 'pip3 install -r requirements.txt'
-                    sh 'python3 scrap_finviz_screener.py'
+                    // sh 'python3 scrap_finviz_screener.py'
                     sh 'python3 scrap_etf_fund_flows.py'
                 }
             }
