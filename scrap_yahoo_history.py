@@ -25,7 +25,7 @@ def main():
     df_input.set_index('Ticker', inplace=True)
     df_output = pd.DataFrame()
 
-    for ticker in df_input.index:
+    for count,ticker in enumerate(df_input.index):
         print('downloading...' + ticker)
         data = yf.download(ticker, period='max', auto_adjust=True, prepost=True)
         data.to_csv(args.output_dir + ticker + '.csv')

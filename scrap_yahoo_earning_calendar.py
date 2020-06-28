@@ -5,6 +5,8 @@ import argparse
 import datetime
 import sys
 import yfinance as yf
+import time
+scrap_delay = 2
 
 def onDay(date, day):
     """
@@ -32,6 +34,7 @@ def main():
     df_output = pd.DataFrame()
 
     for ticker in df_input.index:
+        print(ticker)
         yf_ticker = yf.Ticker(ticker)
         try:
             yf_calendar = yf_ticker.calendar
@@ -50,6 +53,7 @@ def main():
                     new_row.insert(1, 'Ticker', ticker)
                     new_row.insert(2, 'Report', df_input.at[ticker,'Report'])
                     df_output = df_output.append(new_row)
+        time.sleep(scrap_delay)
 
     df_output.reset_index(drop=True, inplace=True)
     df_output.sort_values(by=['Earnings Date', 'Ticker'], inplace=True)
