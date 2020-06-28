@@ -23,7 +23,13 @@ def get_etf_fundflow_page(tickers,start_date,end_date):
     data = {'tickers' : tickers,
             'startDate[date]' : start_date,
             'endDate[date]' : end_date}
-    page = post_url(page_url, data)
+    try:
+        page = post_url(page_url, data)
+    except:
+        print('Scrap failed, try again in 1 minute')
+        time.sleep(60)
+        page = post_url(page_url, data)
+
     df = get_df_from_page(page, drop_columns=['Fund Name','Details'])
     time.sleep(scrap_delay)
     return df
@@ -59,6 +65,8 @@ def main():
     parser.add_argument('-start_date', type=str, help='Specify the start date (default to date)')
     parser.add_argument('-end_date', type=str, help='Specify the end date (default to date)')
     parser.add_argument('-scrap_year', type=int, help='Scrap the fund flow of the specified year')
+    parser.add_argument('-start_month', type=int, default=1, help='Start month for scrap year')
+    parser.add_argument('-start_day', type=int, default=1, help='Start day for scrap year')
     args = parser.parse_args()
 
     df_etf_list = pd.read_csv(args.input)
@@ -78,7 +86,7 @@ def main():
     else:
         tickers = df_etf_list[pd.to_datetime(df_etf_list['Inception']) < datetime.datetime(args.scrap_year+1,1,1)]['Ticker'].to_list()
         print('numbers of ETF:', len(tickers))
-        date_list = list([str(d.date()) for d in pd.bdate_range(datetime.datetime(args.scrap_year,1,1), datetime.datetime(args.scrap_year,12,31))])
+        date_list = list([str(d.date()) for d in pd.bdate_range(datetime.datetime(args.scrap_year,args.start_month,args.start_day), datetime.datetime(args.scrap_year,12,31))])
         for d in date_list:
             print('date:', d)
             df = get_etf_fundflow_all_tickers(tickers, d, d)
