@@ -23,7 +23,6 @@ def main():
 
     df_input = pd.read_csv(input_file)
     df_input.set_index('Ticker', inplace=True)
-    df_output = pd.DataFrame()
 
     for count,ticker in enumerate(df_input.index):
         print('downloading...' + ticker)
