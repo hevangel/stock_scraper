@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 
+import yfinance as yf
 import pandas as pd
 import argparse
 import datetime
+import time
 import sys
-import yfinance as yf
 import glob
 import os
+
+scrap_delay = 5
 
 def main():
     parser = argparse.ArgumentParser(description='scrap yahoo earning')
@@ -56,17 +59,25 @@ def main():
 
     print('number of tickers:', len(ticker_list))
     for count,ticker in enumerate(ticker_list):
-        print('downloading...' + ticker)
-        yticker = yf.Ticker(ticker)
-        yticker_info = yticker.info
+        print('downloading...', ticker, count)
+        try:
+            yticker = yf.Ticker(ticker)
+            yticker_info = yticker.info
+        except:
+            print('Error, skip')
+            exit(-1)
+
         for col in df.columns:
             if col in yticker_info:
                 df.loc[ticker,col] = yticker_info[col]
 
-    df['Date'] = args.date
-    print(df)
+        if count % 10 == 0:
+            df['Date'] = args.date
+            df.to_csv(filename)
 
-    print('writing',filename)
+        time.sleep(scrap_delay)
+
+    df['Date'] = args.date
     df.to_csv(filename)
 
 if __name__ == "__main__":

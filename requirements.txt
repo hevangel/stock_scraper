@@ -1,15 +1,18 @@
+# web scraping packages
 requests
 cloudscraper
-
 bs4
 lxml
 junit-xml
 
+# data analysis packages
 pandas
 pandas-datareader
 mplfinance
+scipy
 
-finviz
+# data source packages
 fredapi
+finviz
 yfinance
 investpy

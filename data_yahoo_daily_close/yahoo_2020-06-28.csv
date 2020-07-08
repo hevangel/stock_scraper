@@ -1,0 +1,4 @@
+,previousClose,open,dayHigh,dayLow,regularMarketPreviousClose,regularMarketPrice,regularMarketOpen,regularMarketDayHigh,regularMarketDayLow,marketCap,volume,navPrice,totalAssets,sharesOutstanding,sharesShort,floatShares,shortRatio,shortPercentOfFloat,fiftyDayAverage,twoHundredDayAverage,Date
+MSFT,200.34,199.73,199.87,194.88,200.34,199.73,199.73,199.87,194.88,1488856809472,54675780,,,7583439872,42930465,7472267013,1.24,0.0057,188.2147,170.91132,2020-06-28
+SPY,307.35,306.16,306.39,299.42,307.35,306.16,306.16,306.39,299.42,,127961017,299.89,270626439168,,,,,,303.72678,300.87256,2020-06-28
+FNV,136.54,135.83,137.5957,133.77,136.54,135.83,135.83,137.5957,133.77,26083287040,538535,,,189944992,2997667,188602569,2.95,,137.42853,118.37438,2020-06-28
