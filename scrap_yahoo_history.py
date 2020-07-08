@@ -12,7 +12,7 @@ def main():
     parser = argparse.ArgumentParser(description='scrap yahoo earning')
     parser.add_argument('-input_dir', type=str, help='input directory, use the latest file')
     parser.add_argument('-input_file', type=str, default='data_tickers/yahoo_indexes.csv', help='input file')
-    parser.add_argument('-output_dir', type=str, default='data_yahoo_history/', help='output directory')
+    parser.add_argument('-output_dir', type=str, default='../stock_data/raw_history_yahoo/', help='output directory')
     args = parser.parse_args()
 
     if args.input_dir is not None:
