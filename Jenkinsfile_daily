@@ -22,7 +22,7 @@ pipeline {
         stage('deploy') {
             steps {
                 sh 'git add data_finviz/finviz_${BUILD_TIMESTAMP}.csv'
-                sh 'git add -A data_etf_fundflow'
+                //sh 'git add -A data_etf_fundflow'
                 sh 'git commit --allow-empty -a -m "check in"'
                 sshagent (['git-hevangel']) {
                     sh 'git push origin HEAD:master'
