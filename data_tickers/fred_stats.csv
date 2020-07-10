@@ -12,7 +12,7 @@ MBS10Y,Assets Mortgaged Backed Securities over 10 Years
 MBS5T10,Assets Mortgaged Backed Securities 5 to 10 Years
 MBS1T5,Assets Mortgaged Backed Securities 1 to 5 Years
 MBS911Y,Assets Mortgaged Backed Securities 91 days to 1 Year
-MBS1190,Assets Mortgaged Backed Securities 16 days to 90 days
+MBS1690,Assets Mortgaged Backed Securities 16 days to 90 days
 MBS15,Assets Mortgaged Backed Securities within 15 days
 REP15,Assets Repurchase Agreements 15 days
 REP1690,Assets Repurchase Agreements 16 to 90 days
@@ -54,6 +54,6 @@ M1,M1 Money Stock
 M1V,Velocity of M1 Money Stock
 WDTGAL,U.S. Treasury General Account
 WSHOMCB,Mortgage-Backed Securities
-DFII5, 5-Year Treasury Inflation-Indexed Security, Constant Maturity
-DFII10, 10-Year Treasury Inflation-Indexed Security, Constant Maturity
-DFII30, 30-Year Treasury Inflation-Indexed Security, Constant Maturity
+DFII5,5-Year Treasury Inflation-Indexed Security, Constant Maturity
+DFII10,10-Year Treasury Inflation-Indexed Security, Constant Maturity
+DFII30,30-Year Treasury Inflation-Indexed Security, Constant Maturity

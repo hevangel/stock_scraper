@@ -32,7 +32,7 @@ pipeline {
             steps {
                 dir('../stock_data') {
                     sh 'git add raw_fred/*.csv'
-                    sh 'git commit --allow-empty -a -m "check in"'
+                    sh 'git commit --allow-empty -a -m "weekly scrap"'
                     sshagent (['git-hevangel']) {
                         sh 'git push origin HEAD:master'
                     }
