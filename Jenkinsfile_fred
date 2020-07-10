@@ -1,7 +1,9 @@
 pipeline {
-    agent node {
-        label 'linux'
-        customWorkspace "${env.JENKINS_HOME}/workspace/stock_scrapper"
+    agent {
+        node {
+            label 'linux'
+            customWorkspace "${env.JENKINS_HOME}/workspace/stock_scrapper"
+        }
     }
     triggers {
         cron('H 16 * * 4')
