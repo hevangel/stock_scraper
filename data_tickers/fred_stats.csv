@@ -1,20 +1,30 @@
 Series ID,Description
 WALCL,Total Assets
 SWPT,Central Bank Liquidity Swaps
-TREAS10Y,US Treasury 10 Years
-TREAS1T5,US Treasury 1 to 5 Years
-TREAS5T10,US Treasury 5 to 10 Years
-TREAS911Y,US Treasury 91 days to 1 Year
-TREAS1590,US Treasury 15 to 90 days
-TREAS15,US Treasury 15 days
-REP15,Repurchase Agreements 15 days
-REP1690,Repurchase Agreements 16 to 90 days
+TREAST,Assets US Treasury Securities
+TREAS10Y,Assets US Treasury over 10 Years
+TREAS5T10,Assets US Treasury 5 to 10 Years
+TREAS1T5,Assets US Treasury 1 to 5 Years
+TREAS911Y,Assets US Treasury 91 days to 1 Year
+TREAS1590,Assets US Treasury 15 to 90 days
+TREAS15,Assets US Treasury within 15 days
+MBS10Y,Assets Mortgaged Backed Securities over 10 Years
+MBS5T10,Assets Mortgaged Backed Securities 5 to 10 Years
+MBS1T5,Assets Mortgaged Backed Securities 1 to 5 Years
+MBS911Y,Assets Mortgaged Backed Securities 91 days to 1 Year
+MBS1190,Assets Mortgaged Backed Securities 16 days to 90 days
+MBS15,Assets Mortgaged Backed Securities within 15 days
+REP15,Assets Repurchase Agreements 15 days
+REP1690,Assets Repurchase Agreements 16 to 90 days
+FEDDT,Assets Federal Agency Debt Securities
 RESPPALGUOXCH1NWW,Change from previous week level
+H41RESPPAAC2HCNWW,Corporate Credit Facilities
 FEDFUNDS,Effective Federal Funds Rate
 TB3MS,3-Month Treasury Yield
 TB1YR,1-Year Treasury Yield
 TB4WK,4-Week Treasury Yield
 DTB6,6-Month Treasury Yield
+DFII10,10-Year Treasury Inflation-Indexed Security
 VIXCLS,COBE Volatility Index VIX
 VXVCLS,COBE S&P 500 3-Month Volatility Index
 VXDCLS,COBE DJIA Volatility Index
