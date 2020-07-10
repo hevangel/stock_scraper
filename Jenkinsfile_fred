@@ -2,7 +2,7 @@ pipeline {
     agent {
         node {
             label 'linux'
-            customWorkspace "${env.JENKINS_HOME}/workspace/stock_scrapper"
+            customWorkspace "${env.HOME}/workspace/stock_scrapper"
         }
     }
     triggers {
