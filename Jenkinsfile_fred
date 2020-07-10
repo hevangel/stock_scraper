@@ -10,8 +10,10 @@ pipeline {
     }
     stages {
         stage('fetch') {
-            dir('../stock_data') {
-                git url: 'git@github.com:hevangel/stock_data.git', credentialsId: 'git-hevangel'
+            steps {
+                dir('../stock_data') {
+                    git url: 'git@github.com:hevangel/stock_data.git', credentialsId: 'git-hevangel'
+                }
             }
         }
         stage('scrap') {
