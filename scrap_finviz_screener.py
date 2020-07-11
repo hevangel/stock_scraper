@@ -78,22 +78,21 @@ def main():
         filename = args.output
 
     # scrap the data
-    if not args.no_scrap:
-        if args.use_bs4_scrapper:
-            # use my old code
-            df_filters = []
-            for filter in args.filter:
-                df_filters.append(scrap_finviz(filter, args.tab))
-            df = pd.concat(df_filters)
-        else:
-            # use the finviz package
-            stock_list = Screener(filters=args.filter)
-            df = pd.read_csv(StringIO(stock_list.to_csv()))
+    if args.use_bs4_scrapper:
+        # use my old code
+        df_filters = []
+        for filter in args.filter:
+            df_filters.append(scrap_finviz(filter, args.tab))
+        df = pd.concat(df_filters)
+    else:
+        # use the finviz package
+        stock_list = Screener(filters=args.filter)
+        df = pd.read_csv(StringIO(stock_list.to_csv()))
 
-        df = df.loc[~df.index.duplicated(), ~df.columns.duplicated()]
-        df.drop(columns=['No.']+args.drop_col, inplace=True)
-        df.insert(0, 'Date', args.date, True)
-        df.to_csv(filename)
+    df = df.loc[~df.index.duplicated(), ~df.columns.duplicated()]
+    df.drop(columns=['No.']+args.drop_col, inplace=True)
+    df.insert(0, 'Date', args.date, True)
+    df.to_csv(filename)
 
 if __name__ == "__main__":
     status = main()
