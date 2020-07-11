@@ -60,7 +60,7 @@ def df_to_csv(df, output_prefix, start_date, end_date):
 def main():
     parser = argparse.ArgumentParser(description='scrap finviz screener')
     parser.add_argument('-input', type=str, default='data_tickers/etfs_info.csv', help='list of ETFs to scrap')
-    parser.add_argument('-output_prefix', type=str, default='data_etf_fundflow/etf_fundflow_', help='prefix of the output file')
+    parser.add_argument('-output_prefix', type=str, default='../stock_data/raw_etf_fundflow/etf_fundflow_', help='prefix of the output file')
     parser.add_argument('-date', type=str, help='Specify the date (default to last bussiness date)')
     parser.add_argument('-start_date', type=str, help='Specify the start date (default to date)')
     parser.add_argument('-end_date', type=str, help='Specify the end date (default to date)')
@@ -73,7 +73,7 @@ def main():
 
     if args.scrap_year is None:
         if args.date is None:
-            args.date = str((date.today() - BDay(1)).date())
+            args.date = str(scrap_utils.get_prev_market_date(date.today()))
         if args.start_date is None:
             args.start_date = args.date
         if args.end_date is None:
@@ -86,12 +86,17 @@ def main():
     else:
         tickers = df_etf_list[pd.to_datetime(df_etf_list['Inception']) < datetime.datetime(args.scrap_year+1,1,1)]['Ticker'].to_list()
         print('numbers of ETF:', len(tickers))
-        date_list = list([str(d.date()) for d in pd.bdate_range(datetime.datetime(args.scrap_year,args.start_month,args.start_day), datetime.datetime(args.scrap_year,12,31))])
+        start_date = datetime.datetime(args.scrap_year,args.start_month,args.start_day)
+        end_date = datetime.datetime(args.scrap_year,12,31)
+        prev_market_date = scrap_utils.get_prev_market_date(date.today())
+        if end_date.date() > prev_market_date:
+            end_date = prev_market_date
+        date_list = list([str(d.date()) for d in pd.bdate_range(start_date, end_date)])
         for d in date_list:
             print('date:', d)
             df = get_etf_fundflow_all_tickers(tickers, d, d)
             df_to_csv(df, args.output_prefix, d, d)
 
 if __name__ == "__main__":
-    sys.exit(main())
-
+    status = main()
+    sys.exit(0 if status is None else status)

@@ -20,7 +20,7 @@ pipeline {
             steps {
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
-                    sh 'pip3 install --upgrade pip'
+                    sh 'pip3 install --upgrade pip --upgrade'
                     sh 'pip3 install -r requirements.txt'
                     sh 'python3 scrap_finviz_screener.py'
                     sh 'python3 report_finviz.py'

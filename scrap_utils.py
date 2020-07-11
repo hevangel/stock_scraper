@@ -4,6 +4,7 @@ import requests
 import cloudscraper
 import pandas as pd
 import bs4
+from pandas.tseries.offsets import BDay
 
 use_cloudscrapper = False
 scrapper = None
@@ -54,5 +55,7 @@ def is_market_close(date):
 
 # Get previous market day
 def get_prev_market_date(date):
-    pass
-
+    prev_date = (date.today() - BDay(1)).date()
+    if is_market_close(str(prev_date)):
+        prev_date = (prev_date - BDay(1)).date()
+    return prev_date
