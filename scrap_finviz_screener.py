@@ -57,7 +57,6 @@ def main():
     parser.add_argument('-no_scrap', action='store_true', help='No scrapping, read existing csv file')
     parser.add_argument('-no_report', action='store_true', help='Do not generate XML report')
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
-    parser.add_argument('-report', type=str, default='daily_report.xml', help='file name of the test report')
     parser.add_argument('-filter', type=str, action='append', help='filters apply to the screener')
     parser.add_argument('-tab', type=str, action='append', help='tabs to the scrap')
     parser.add_argument('-delay', type=int, help='delay in sec between each URL request')
@@ -65,7 +64,7 @@ def main():
     args = parser.parse_args()
 
     if args.filter is None:
-        args.filter = ['f=cap_microover', 'f=cap_microunder,sh_opt_option']
+        args.filter = ['f=cap_microover', 'f=cap_microunder']
     if args.delay is not None:
         global scrap_delay
         scrap_delay = args.delay
@@ -101,32 +100,7 @@ def main():
         df.insert(0, 'Date', args.date, True)
         df.to_csv(filename)
 
-    # generate report
-    if not args.no_report:
-        df = pd.read_csv(filename)
-        df.set_index('Ticker', inplace=True)
-        df.drop_duplicates(inplace=True)
-        ts_list = []
-        for sector in df.Sector.unique():
-            ts = TestSuite(name=sector)
-            df_sector = df[df['Sector'] == sector]
-            for industry in df_sector.Industry.unique():
-                for ticker in df.index[df['Industry'] == industry]:
-                    print(sector,'-',industry,'-',ticker)
-                    if df.loc[ticker,'Market Cap'].find('B') > 0:
-                        tc = TestCase(classname=industry,
-                                      name=ticker,
-                                      elapsed_sec=df.loc[ticker,'Price'],
-                                      stdout=df.loc[ticker,'Change'],
-                                      stderr=df.loc[ticker,'Market Cap'])
-                        if df.loc[ticker,'Change'].find('-') >= 0:
-                            tc.add_error_info(message='lower')
-                        ts.test_cases.append(tc)
-            ts_list.append(ts)
-
-        with open(args.report, 'w') as f:
-            TestSuite.to_file(f, ts_list, prettyprint=True)
-
 if __name__ == "__main__":
-    sys.exit(main())
+    status = main()
+    sys.exit(0 if status is None else status)
 
