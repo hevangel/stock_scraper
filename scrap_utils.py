@@ -52,3 +52,7 @@ def is_market_close(date):
     else:
         return False
 
+# Get previous market day
+def get_prev_market_date(date):
+    pass
+
