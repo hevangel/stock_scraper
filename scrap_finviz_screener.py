@@ -52,10 +52,8 @@ def scrap_finviz(filter, tab_list = None):
 def main():
     parser = argparse.ArgumentParser(description='scrap finviz screener')
     parser.add_argument('-output', type=str, help='output file')
-    parser.add_argument('-output_prefix', type=str, default='data_finviz/finviz_', help='prefix of the output file')
+    parser.add_argument('-output_prefix', type=str, default='../stock_data/raw_daily_finviz/finviz_', help='prefix of the output file')
     parser.add_argument('-use_bs4_scrapper', type=bool, default=True, help='Use my old bs4 scraper')
-    parser.add_argument('-no_scrap', action='store_true', help='No scrapping, read existing csv file')
-    parser.add_argument('-no_report', action='store_true', help='Do not generate XML report')
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
     parser.add_argument('-filter', type=str, action='append', help='filters apply to the screener')
     parser.add_argument('-tab', type=str, action='append', help='tabs to the scrap')
@@ -91,9 +89,6 @@ def main():
             # use the finviz package
             stock_list = Screener(filters=args.filter)
             df = pd.read_csv(StringIO(stock_list.to_csv()))
-
-        # save temp file
-        df.to_csv(filename)
 
         df = df.loc[~df.index.duplicated(), ~df.columns.duplicated()]
         df.drop(columns=['No.']+args.drop_col, inplace=True)

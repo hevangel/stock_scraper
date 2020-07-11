@@ -1,31 +1,46 @@
 pipeline {
-    agent any
+    agent {
+        node {
+            label 'linux'
+            customWorkspace "${env.HOME}/workspace/stock_scrapper"
+        }
+    }
+    triggers {
+        cron('H 14 * * 4')
+    }
     stages {
-        stage('build') {
+        stage('fetch') {
+            steps {
+                dir('../stock_data') {
+                    git url: 'git@github.com:hevangel/stock_data.git', credentialsId: 'git-hevangel'
+                }
+            }
+        }
+        stage('scrap') {
             steps {
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install --upgrade pip'
                     sh 'pip3 install -r requirements.txt'
                     sh 'python3 scrap_finviz_screener.py'
-                    // sh 'python3 scrap_etf_fund_flows.py'
+                    sh 'python3 report_finviz.py'
                 }
             }
         }
-        stage('test') {
+        stage('archive') {
             steps {
                 archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
-                // archiveArtifacts artifacts: 'data_etf_fundflow/etf_fund_flow_${BUILD_TIMESTAMP}.csv', fingerprint: true
                 junit 'daily_report.xml'
             }
         }
-        stage('deploy') {
+        stage('push') {
             steps {
-                sh 'git add data_finviz/finviz_${BUILD_TIMESTAMP}.csv'
-                //sh 'git add -A data_etf_fundflow'
-                sh 'git commit --allow-empty -a -m "check in"'
-                sshagent (['git-hevangel']) {
-                    sh 'git push origin HEAD:master'
+                dir('../stock_data') {
+                    sh 'git add raw_daily_finviz/finviz_${BUILD_TIMESTAMP}.csv'
+                    sh 'git commit --allow-empty -a -m "daily scrap"'
+                    sshagent (['git-hevangel']) {
+                        sh 'git push origin HEAD:master'
+                    }
                 }
             }
         }
