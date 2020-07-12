@@ -8,6 +8,8 @@ import investpy
 import glob
 import os
 
+scrap_delay = 5
+
 def main():
     parser = argparse.ArgumentParser(description='scrap yahoo earning')
     parser.add_argument('-input_dir', type=str, help='input directory, use the latest file')
