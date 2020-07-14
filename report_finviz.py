@@ -26,8 +26,8 @@ def main():
         df_sector = df[df['Sector'] == sector]
         for industry in df_sector.Industry.unique():
             for ticker in df.index[df['Industry'] == industry]:
-                print(sector,'-',industry,'-',ticker)
                 if df.loc[ticker,'Market Cap'].find('B') > 0:
+                    print(sector, '-', industry, '-', ticker, '-', df.loc[ticker,'Change'])
                     tc = TestCase(classname=industry,
                                   name=ticker,
                                   elapsed_sec=df.loc[ticker,'Price'],

@@ -22,14 +22,14 @@ pipeline {
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install --upgrade pip'
                     sh 'pip3 install -r requirements.txt '
-                    sh 'python3 scrap_investpy_stock_daily_close.py'
+                    sh 'python3 scrap_yahoo_daily_close.py'
                 }
             }
         }
         stage('push') {
             steps {
                 dir('../stock_data') {
-                    sh 'git add raw_daily_investing_stock/investing_stock_${BUILD_TIMESTAMP}.csv'
+                    sh 'git add raw_daily_yahoo/yahoo_${BUILD_TIMESTAMP}.csv'
                     sh 'git commit --allow-empty -a -m "daily scrap"'
                     sshagent (['git-hevangel']) {
                         sh 'git push origin HEAD:master'
