@@ -38,7 +38,7 @@ def main():
                 etf_info['Close'] = recent_data.loc[scrap_date, 'Close']
 
             etf_info_list.append(etf_info)
-            #time.sleep(scrap_delay)
+            time.sleep(scrap_delay)
         except:
             pass
 

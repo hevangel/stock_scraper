@@ -38,7 +38,7 @@ def main():
                 info['Close'] = recent_data.loc[scrap_date, 'Close']
 
             info_list.append(info)
-            #time.sleep(scrap_delay)
+            time.sleep(scrap_delay)
         except:
             print('failed')
 
