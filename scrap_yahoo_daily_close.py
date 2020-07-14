@@ -71,7 +71,7 @@ def main():
         except:
             print('Error, skip')
 
-        #time.sleep(scrap_delay)
+        time.sleep(scrap_delay)
 
     df['Date'] = args.date
     df.to_csv(filename)
