@@ -17,27 +17,27 @@ def main():
     args = parser.parse_args()
 
     # Index
-    #indices = investpy.get_indices()
-    #df_index = pd.DataFrame(indices)
-    #df_index.to_csv(args.output_prefix + 'index_info.csv')
+    indices = investpy.get_indices()
+    df_index = pd.DataFrame(indices)
+    df_index.to_csv(args.output_prefix + 'index_info.csv')
 
     # Commodity
-    #commodities = investpy.get_commodities()
-    #commodities_dict = investpy.get_commodities_dict()
-    #commodity_info_list = []
-    #for commodity,country in zip(commodities['name'].to_list(),commodities['country'].to_list()):
-    #    print(commodity,',',country)
-    #    commodity_info_list.append(investpy.get_commodity_information(commodity,country))
-    #    time.sleep(scrap_delay)
+    commodities = investpy.get_commodities()
+    commodities_dict = investpy.get_commodities_dict()
+    commodity_info_list = []
+    for commodity,country in zip(commodities['name'].to_list(),commodities['country'].to_list()):
+        print(commodity,',',country)
+        commodity_info_list.append(investpy.get_commodity_information(commodity,country))
+        time.sleep(scrap_delay)
 
-    #df_commodity = pd.concat(commodity_info_list)
-    #df_commodity.to_csv(args.output_prefix + 'commodity_info.csv')
+    df_commodity = pd.concat(commodity_info_list)
+    df_commodity.to_csv(args.output_prefix + 'commodity_info.csv')
 
     # ETF
-    #etfs_dict_us = investpy.get_etfs_dict('united states')
-    #etfs_dict_canada = investpy.get_etfs_dict('canada')
-    #df_etfs = pd.DataFrame(etfs_dict_us + etfs_dict_canada)
-    #df_etfs.to_csv(args.output_prefix + 'etfs_info.csv')
+    etfs_dict_us = investpy.get_etfs_dict('united states')
+    etfs_dict_canada = investpy.get_etfs_dict('canada')
+    df_etfs = pd.DataFrame(etfs_dict_us + etfs_dict_canada)
+    df_etfs.to_csv(args.output_prefix + 'etfs_info.csv')
 
     # Stock
     stocks_dict_us = investpy.get_stocks_dict('united states')

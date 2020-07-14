@@ -29,7 +29,7 @@ pipeline {
         }
         stage('archive') {
             steps {
-                archiveArtifacts artifacts: '../stock_data/raw_daily_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
+                // archiveArtifacts artifacts: '../stock_data/raw_daily_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
                 junit 'daily_report.xml'
             }
         }
