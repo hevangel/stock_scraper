@@ -40,7 +40,7 @@ def main():
             etf_info_list.append(etf_info)
             time.sleep(scrap_delay)
         except:
-            pass
+            print('failed')
 
     df = pd.concat(etf_info_list)
     df['Date'] = args.date
