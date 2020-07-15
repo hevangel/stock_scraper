@@ -29,18 +29,10 @@ def main():
         print('downloading...', row['symbol'], row['country'], '-', index)
         try:
             info = investpy.get_stock_information(row['symbol'],row['country'])
-            recent_data = investpy.get_stock_recent_data(row['symbol'],row['country'])
-
-            if scrap_date in recent_data.index:
-                info['Open'] = recent_data.loc[scrap_date, 'Open']
-                info['High'] = recent_data.loc[scrap_date, 'High']
-                info['Low'] = recent_data.loc[scrap_date, 'Low']
-                info['Close'] = recent_data.loc[scrap_date, 'Close']
-
             info_list.append(info)
-            time.sleep(scrap_delay)
         except:
             print('failed')
+        time.sleep(scrap_delay)
 
     df = pd.concat(info_list)
     df['Date'] = args.date
