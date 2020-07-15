@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 
+import requests
+import bs4
 import pandas as pd
 import argparse
 import datetime
 import time
 import sys
 import investpy
-
+import scrap_utils
 scrap_delay = 2
 
 def main():
     parser = argparse.ArgumentParser(description='scrap investing.com daily close')
-    parser.add_argument('-input_file', type=str, default='data_tickers/investing_etfs_info.csv', help='input file')
     parser.add_argument('-output_prefix', type=str, default='../stock_data/raw_daily_investing_etf/investing_etf_', help='prefix of the output file')
     parser.add_argument('-date', type=str, help='Specify the date')
     args = parser.parse_args()
@@ -20,32 +21,37 @@ def main():
         scrap_date = datetime.date.today()
         args.date = str(scrap_date)
 
-    filename = args.output_prefix + args.date + '.csv'
-    df_input = pd.read_csv(args.input_file)
+    # get ETF overview
+    page = scrap_utils.get_url('https://www.investing.com/etfs/usa-etfs?&issuer_filter=0')
+    soup = bs4.BeautifulSoup(page, 'lxml')
+    df_overview = pd.read_html(str(soup.find('table')), header=0, index_col=2)[0]
+    df_overview.drop(columns=['Unnamed: 0', 'Unnamed: 7'], inplace=True)
 
+    last_trade_time = df_overview.iloc[0]['Time']
+    df_overview_traded = df_overview[df_overview['Time'] == last_trade_time]
+
+    # get ETF info
     etf_info_list = []
-    print('number of tickers:', len(df_input.index))
-    for index,row in df_input.iterrows():
-        print('downloading...', row['symbol'], row['country'], '-', index)
+    print('number of traded tickers:', len(df_overview_traded.index), '/', len(df_overview.index))
+    count = 0
+    for index,row in df_overview_traded.iterrows():
+        print('downloading...', index, '-', count)
         try:
-            etf_info = investpy.get_etf_information(row['name'],row['country'])
-            etf_info['symbol'] = row['symbol']
-            etf_info['country'] = row['country']
-            recent_data = investpy.get_etf_recent_data(row['name'],row['country'])
-
-            if scrap_date in recent_data.index:
-                etf_info['Open'] = recent_data.loc[scrap_date, 'Open']
-                etf_info['High'] = recent_data.loc[scrap_date, 'High']
-                etf_info['Low'] = recent_data.loc[scrap_date, 'Low']
-                etf_info['Close'] = recent_data.loc[scrap_date, 'Close']
+            etf_info = investpy.get_etf_information(row['Name'],'united states')
+            etf_info['Symbol'] = index
 
             etf_info_list.append(etf_info)
             time.sleep(scrap_delay)
         except:
             print('failed')
+        count += 1
 
-    df = pd.concat(etf_info_list)
+    df_etf_info = pd.concat(etf_info_list)
+    df_etf_info.set_index('Symbol', inplace=True)
+
+    df = df_etf_info.join(df_overview_traded, how='left')
     df['Date'] = args.date
+    filename = args.output_prefix + args.date + '.csv'
     df.to_csv(filename)
 
 if __name__ == "__main__":
