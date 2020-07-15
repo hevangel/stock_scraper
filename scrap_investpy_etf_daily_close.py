@@ -29,6 +29,8 @@ def main():
         print('downloading...', row['symbol'], row['country'], '-', index)
         try:
             etf_info = investpy.get_etf_information(row['name'],row['country'])
+            etf_info['symbol'] = row['symbol']
+            etf_info['country'] = row['country']
             recent_data = investpy.get_etf_recent_data(row['name'],row['country'])
 
             if scrap_date in recent_data.index:
