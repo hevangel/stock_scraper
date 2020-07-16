@@ -16,3 +16,4 @@ fredapi
 finviz
 yfinance
 investpy
+yahooquery
