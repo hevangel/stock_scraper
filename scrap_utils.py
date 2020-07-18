@@ -59,3 +59,14 @@ def get_prev_market_date(date):
     if is_market_close(str(prev_date)):
         prev_date = (prev_date - BDay(1)).date()
     return prev_date
+
+# Write DataFrame to CSV
+def df_to_csv(df, output_prefix, start_date, end_date):
+    if start_date == end_date:
+        df.insert(0, 'Date', start_date, True)
+        filename = output_prefix + start_date + '.csv'
+    else:
+        df.insert(0, 'Start Date', start_date, True)
+        df.insert(0, 'End Date', end_date, True)
+        filename = output_prefix + start_date + '_' + end_date + '.csv'
+    df.to_csv(filename)
