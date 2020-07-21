@@ -26,7 +26,7 @@ def main():
 
     for count,ticker in enumerate(df_input.index):
         print('downloading...' + ticker)
-        data = yf.download(ticker, period='max', auto_adjust=True, prepost=True)
+        data = yf.download(ticker, period='max', auto_adjust=False, prepost=True)
         data.to_csv(args.output_dir + ticker + '.csv')
 
 if __name__ == "__main__":

@@ -4,24 +4,17 @@ import pandas as pd
 import argparse
 import datetime
 import sys
-import investpy
 import glob
 import os
+import time
+import requests
 
-scrap_delay = 5
-
-4
-
-http: // download.macrotrends.net / assets / php / stock_data_export.php?t = [SYMBOL NAME]
-
-# Eg give csv file back
-http: // download.macrotrends.net / assets / php / stock_data_export.php?t = MSFT
+scrap_delay = 2
 
 def main():
-    parser = argparse.ArgumentParser(description='scrap yahoo earning')
-    parser.add_argument('-input_dir', type=str, help='input directory, use the latest file')
+    parser = argparse.ArgumentParser(description='scrap history from macrotrends')
     parser.add_argument('-input_file', type=str, default='data_tickers/yahoo_indexes.csv', help='input file')
-    parser.add_argument('-output_dir', type=str, default='data_yahoo_history/', help='output directory')
+    parser.add_argument('-output_dir', type=str, default='../stock_data/raw_history_macrotrends/', help='output directory')
     args = parser.parse_args()
 
     if args.input_dir is not None:
@@ -35,9 +28,13 @@ def main():
 
     for count,ticker in enumerate(df_input.index):
         print('downloading...' + ticker)
-        data = yf.download(ticker, period='max', auto_adjust=True, prepost=True)
-        data.to_csv(args.output_dir + ticker + '.csv')
+        url = 'http://download.macrotrends.net/assets/php/stock_data_export.php?t=' + ticker
+        filename = args.output_dir + ticker + '.csv'
+        response = requests.get(url)
+        with open(filename) as f:
+            f.write(response.content)
+        time.sleep(scrap_delay)
 
 if __name__ == "__main__":
-    sys.exit(main())
-
+    status = main()
+    sys.exit(0 if status is None else status)

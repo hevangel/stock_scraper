@@ -144,7 +144,6 @@ BKNG,after
 AMC,before
 WIX,before
 JD,before
-LMT,before
 AMSC,after
 UVV,after
 WU,after
@@ -226,7 +225,6 @@ WORK,after
 CIEN,after
 FSOL,before
 PLD,after
-CMG,after
 DPZ,before
 WYNN,after
 ADBE,after

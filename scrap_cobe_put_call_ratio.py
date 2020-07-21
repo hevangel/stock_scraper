@@ -34,7 +34,7 @@ def get_cpc(scrap_date = None):
 
     tables = soup.find_all('table')
 
-    df = pd.DataFrame(index=['Total', 'Index', 'ETP', 'Equity', 'VIX', 'SPX_SPXW', 'OEX'],
+    df = pd.DataFrame(index=['total', 'index', 'etp', 'equity', 'vix', 'spx', 'oex'],
                       columns=['Ratio', 'VolumeCall', 'VolumePut', 'VolumeTotal',
                                'OpenInterestCall','OpenInterestPut','OpenInterestTotal'])
 
@@ -69,9 +69,12 @@ def main():
             print('The market is closed today')
             continue
 
+        # update the CSV data file
         df = get_cpc(d)
         if df is not None:
-            df_to_csv(df, args.output_prefix, d, d)
+            for index in df.index:
+                df.loc[[index]].to_csv('../stock_data/data_cpc/'+index+'.csv',header=False,index=False,mode='a')
+
 
 if __name__ == "__main__":
     status = main()

@@ -29,7 +29,7 @@ def main():
         today = datetime.datetime.fromisoformat(args.today).date()
     next_monday = onDay(today, 0)
     next_friday = onDay(next_monday, 4)
-    df_input = pd.read_csv(args.input)
+    df_input = pd.read_csv(args.input, comment='#')
     df_input.set_index('Ticker', inplace=True)
     df_output = pd.DataFrame()
 
@@ -51,8 +51,10 @@ def main():
                 if next_earnings_date >= next_monday and next_earnings_date <= next_friday:
                     new_row = yf_calendar.T
                     new_row.insert(1, 'Ticker', ticker)
-                    new_row.insert(2, 'Report', df_input.at[ticker,'Report'])
+                    report = df_input.at[ticker, 'Report']
+                    new_row.insert(2, 'Report', report)
                     df_output = df_output.append(new_row)
+
         time.sleep(scrap_delay)
 
     df_output.reset_index(drop=True, inplace=True)
@@ -61,5 +63,5 @@ def main():
     df_output.to_csv(args.output_prefix + str(onDay(today,0)) + '.csv', index=False)
 
 if __name__ == "__main__":
-    sys.exit(main())
-
+    status = main()
+    sys.exit(0 if status is None else status)

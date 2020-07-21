@@ -91,5 +91,5 @@ def main():
     df.to_csv(filename)
 
 if __name__ == "__main__":
-    sys.exit(main())
-
+    status = main()
+    sys.exit(0 if status is None else status)
