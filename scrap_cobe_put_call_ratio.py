@@ -72,6 +72,7 @@ def main():
         # update the CSV data file
         df = get_cpc(d)
         if df is not None:
+            df.insert(0, 'Date', d, True)
             for index in df.index:
                 df.loc[[index]].to_csv('../stock_data/data_cpc/'+index+'.csv',header=False,index=False,mode='a')
 
