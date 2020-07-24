@@ -24,8 +24,6 @@ def main():
     parser.add_argument('-date', type=str, help='Specify the date to download')
     parser.add_argument('-output_prefix', type=str, default='../stock_data/raw_daily_eoddata/eoddata_', help='prefix of the output file')
     args = parser.parse_args()
-    args.username = 'hevangel'
-    args.password = 'eMacross1'
 
     if args.date is None:
         scrap_date = datetime.date.today()
