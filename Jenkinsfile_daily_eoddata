@@ -24,7 +24,7 @@ pipeline {
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt --upgrade'
-                    sh 'python3 scrap_eoddata.py -username $EODDATA_CREDS_USR -password $EODDATA_CREDS_PSW'
+                    sh 'python3 scrap_eoddata.py -bin /usr/local/bin/phantomjs -username $EODDATA_CREDS_USR -password $EODDATA_CREDS_PSW'
                 }
             }
         }

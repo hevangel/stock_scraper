@@ -23,6 +23,7 @@ def main():
     parser.add_argument('-delay', type=int, default=1, help='delay in sec between each URL request')
     parser.add_argument('-date', type=str, help='Specify the date to download')
     parser.add_argument('-output_prefix', type=str, default='../stock_data/raw_daily_eoddata/eoddata_', help='prefix of the output file')
+    parser.add_argument('-bin', type=str, default='executable binary file')
     args = parser.parse_args()
     args.date = '2020-07-23'
 
@@ -37,7 +38,10 @@ def main():
             options.add_argument("--headless")
         driver = webdriver.Firefox(options=options)
     else:
-        driver = webdriver.PhantomJS()
+        if args.bin is not None:
+            driver = webdriver.PhantomJS(args.bin)
+        else:
+            driver = webdriver.PhantomJS()
     driver.implicitly_wait(10)
     wait = WebDriverWait(driver, 10)
     driver.get('http://www.eoddata.com')
