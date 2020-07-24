@@ -24,6 +24,7 @@ def main():
     parser.add_argument('-date', type=str, help='Specify the date to download')
     parser.add_argument('-output_prefix', type=str, default='../stock_data/raw_daily_eoddata/eoddata_', help='prefix of the output file')
     args = parser.parse_args()
+    args.date = '2020-07-23'
 
     if args.date is None:
         scrap_date = datetime.date.today()
@@ -49,21 +50,27 @@ def main():
     password_textbox.send_keys(args.password)
     login_button.click()
 
-    # download CSV
     driver.get('http://www.eoddata.com/download.aspx')
+    close_button = driver.find_element_by_id('cboxClose')
+    close_button.click()
+
+    # download CSV
     exchange_list = ['INDEX', 'AMEX', 'NYSE', 'NASDAQ', 'OTCBB']
-    for exchange in
-    exchange_select = Select(driver.find_element_by_id('ctl00_cph1_d1_cboExchange'))
-    exchange_select.select_by_value('INDEX')
-    download_link = driver.find_element_by_link_text('Jul 22 2020')
-    download_url = download_link.get_attribute('href')
-    session = requests.Session()
-    cookies = driver.get_cookies()
-    for cookie in cookies:
-        session.cookies.set(cookie['name'], cookie['value'])
-    response = session.get(download_url)
-    with open('a.csv', 'wb') as f:
-        f.write(response.content)
+    for exchange in exchange_list:
+        print('download...',exchange)
+        exchange_select = Select(driver.find_element_by_id('ctl00_cph1_d1_cboExchange'))
+        exchange_select.select_by_value(exchange)
+        download_link = driver.find_element_by_link_text(scrap_date.strftime('%b %d %Y'))
+        download_url = download_link.get_attribute('href')
+        session = requests.Session()
+        cookies = driver.get_cookies()
+        for cookie in cookies:
+            session.cookies.set(cookie['name'], cookie['value'])
+        response = session.get(download_url)
+        with open(args.output_prefix + exchange + '_' + str(scrap_date.date()) + '.csv', 'wb') as f:
+            f.write(response.content)
+
+    driver.close()
 
 if __name__ == "__main__":
     status = main()
