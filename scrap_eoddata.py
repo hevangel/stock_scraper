@@ -25,7 +25,6 @@ def main():
     parser.add_argument('-output_prefix', type=str, default='../stock_data/raw_daily_eoddata/eoddata_', help='prefix of the output file')
     parser.add_argument('-bin', type=str, default='executable binary file')
     args = parser.parse_args()
-    args.date = '2020-07-23'
 
     if args.date is None:
         scrap_date = datetime.date.today()

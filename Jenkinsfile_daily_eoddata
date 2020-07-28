@@ -1,12 +1,12 @@
 pipeline {
     agent {
         node {
-            label 'linux'
+            label 'amazon'
             customWorkspace "${env.HOME}/workspace/stock_scrapper"
         }
     }
     triggers {
-        cron('H 9 * * 1-5')
+        cron('H 18 * * 1-5')
     }
     stages {
         stage('fetch') {
