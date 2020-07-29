@@ -23,11 +23,11 @@ def main():
     parser.add_argument('-delay', type=int, default=1, help='delay in sec between each URL request')
     parser.add_argument('-date', type=str, help='Specify the date to download')
     parser.add_argument('-output_prefix', type=str, default='../stock_data/raw_daily_eoddata/eoddata_', help='prefix of the output file')
-    parser.add_argument('-bin', type=str, default='executable binary file')
+    parser.add_argument('-bin', type=str, help='executable binary file')
     args = parser.parse_args()
 
     if args.date is None:
-        scrap_date = datetime.date.today()
+        scrap_date = datetime.datetime.today()
     else:
         scrap_date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
 
