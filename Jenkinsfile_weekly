@@ -1,38 +1,39 @@
 pipeline {
-    agent any
+    agent {
+        node {
+            label 'linux'
+            customWorkspace "${env.HOME}/workspace/stock_scrapper"
+        }
+    }
     triggers {
         cron('H 0 * * 6')
     }
     stages {
-        stage('build') {
-            environment {
-                FRED_API_KEY = credentials('fred-api-key')
+        stage('fetch') {
+            steps {
+                dir('../stock_data') {
+                    git url: 'git@github.com:hevangel/stock_data.git', credentialsId: 'git-hevangel'
+                }
             }
+        }
+        stage('scrap') {
             steps {
                 sh 'pip install --upgrade pip'
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
-                    sh 'pip3 install -r requirements.txt'
-                    sh 'python3 scrap_yahoo_earning_calendar.py'                                // get next week's earning calendar
-                    sh 'python3 scrap_yahoo_history.py'                                         // get indexes
-                    sh 'python3 scrap_yahoo_history.py -input_file data_tickers/etfs_info.csv'  // get etf
-                    sh 'python3 scrap_yahoo_history.py -input_dir data_finviz'                  // get stocks
+                    sh 'pip3 install -r requirements.txt --upgrade'
+                    sh 'python scrap_etf_info.py'
                 }
             }
         }
-        //stage('test') {
-        //    steps {
-        //        archiveArtifacts artifacts: 'data_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
-        //        junit 'weekly_report.xml'
-        //    }
-        //}
         stage('deploy') {
             steps {
-                sh 'git add data_yahoo_earnings_estimate/*.csv'
-                sh 'git add data_yahoo_history/*.csv'
-                sh 'git commit --allow-empty -a -m "update scrapped data"'
-                sshagent (['git-hevangel']) {
-                    sh 'git push origin HEAD:master'
+                dir('../stock_data') {
+                    sh 'git add data_tickers/*.csv'
+                    sh 'git commit --allow-empty -a -m "weekly update"'
+                    sshagent (['git-hevangel']) {
+                        sh 'git push origin HEAD:master'
+                    }
                 }
             }
         }
