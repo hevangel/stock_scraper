@@ -1,7 +1,7 @@
 pipeline {
     agent {
         node {
-            label 'linux'
+            label 'amazon'
             customWorkspace "${env.HOME}/workspace/stock_scrapper"
         }
     }
