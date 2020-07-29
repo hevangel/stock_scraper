@@ -18,7 +18,6 @@ pipeline {
         }
         stage('scrap') {
             steps {
-                sh 'pip install --upgrade pip'
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt --upgrade'
