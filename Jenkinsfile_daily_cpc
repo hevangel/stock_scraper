@@ -6,7 +6,7 @@ pipeline {
         }
     }
     triggers {
-        cron('H 14 * * 1-5')
+        cron('H 18 * * 1-5')
     }
     stages {
         stage('fetch') {
