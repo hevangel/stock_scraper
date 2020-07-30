@@ -1,5 +1,6 @@
 # web scraping packages
 requests
+wget
 cloudscraper
 bs4
 lxml

@@ -23,7 +23,6 @@ def main():
     args = parser.parse_args()
 
     args.input_file = 'data_tickers/etfs_info.csv'
-    args.skip = 192
 
     df_input = pd.read_csv(args.input_file)
     df_input.set_index('Ticker', inplace=True)
