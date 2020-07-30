@@ -14,7 +14,7 @@ def main():
     parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
 
-    args.skip = 26
+    args.skip = 264
 
     if args.input_file == None:
         args.input_file = [

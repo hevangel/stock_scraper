@@ -19,8 +19,6 @@ def main():
     parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
 
-    args.skip = 280
-
     args.input_file = 'data_tickers/etfs_info.csv'
 
     if args.input_dir is not None:
