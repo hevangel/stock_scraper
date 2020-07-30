@@ -22,15 +22,15 @@ pipeline {
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install --upgrade pip'
                     sh 'pip3 install -r requirements.txt'
-                    sh 'python3 scrap_finviz_screener.py'
-                    sh 'python3 report_finviz.py'
+                    // sh 'python3 scrap_finviz_screener.py'
+                    // sh 'python3 report_finviz.py'
                 }
             }
         }
         stage('archive') {
             steps {
                 // archiveArtifacts artifacts: '../stock_data/raw_daily_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
-                junit 'daily_report.xml'
+                // junit 'daily_report.xml'
             }
         }
         stage('push') {
@@ -38,7 +38,8 @@ pipeline {
                 dir('../stock_data') {
                     sshagent (['git-hevangel']) {
                         sh 'git pull origin master'
-                        sh 'git add raw_daily_finviz/finviz_${BUILD_TIMESTAMP}.csv'
+                        //sh 'git add raw_daily_finviz/finviz_${BUILD_TIMESTAMP}.csv'
+                        sh 'git add raw_daily_finviz/finviz_2020-07-29.csv'
                         sh 'git commit --allow-empty -a -m "daily scrap"'
                         sh 'git push origin HEAD:master'
                     }
