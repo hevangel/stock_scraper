@@ -20,18 +20,9 @@ pipeline {
             steps {
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
-                    sh 'pip3 install --upgrade pip'
-                    sh 'pip3 install -r requirements.txt'
-                    sh 'python3 scrap_finviz_screener.py'
-                    sh 'python3 report_finviz.py'
+                    sh 'pip3 install -r requirements.txt --upgrade'
                     sh 'python3 scrap_cobe_put_call_ratio.py'
                 }
-            }
-        }
-        stage('archive') {
-            steps {
-                // archiveArtifacts artifacts: '../stock_data/raw_daily_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
-                junit 'daily_report.xml'
             }
         }
         stage('push') {
@@ -39,7 +30,6 @@ pipeline {
                 dir('../stock_data') {
                     sshagent (['git-hevangel']) {
                         sh 'git pull origin master'
-                        sh 'git add raw_daily_finviz/finviz_${BUILD_TIMESTAMP}.csv'
                         sh 'git add data_cpc/*'
                         sh 'git commit --allow-empty -a -m "daily scrap"'
                         sh 'git push origin HEAD:master'
