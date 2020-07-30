@@ -20,13 +20,21 @@ def main():
     parser.add_argument('-input_file', type=str, default='data_tickers/all_tickers.csv', help='input file')
     parser.add_argument('-output_dir', type=str, default='../stock_data/raw_history_macrotrends/', help='output directory')
     parser.add_argument('-no_marketcap', action='store_true', help='scrap market cap history')
+    parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
+
+    args.input_file = 'data_tickers/etfs_info.csv'
+    args.skip = 192
+    args.no_marketcap = True
 
     df_input = pd.read_csv(args.input_file)
     df_input.set_index('Ticker', inplace=True)
 
     for count,ticker in enumerate(df_input.index):
-        print('downloading...' + ticker)
+        if args.skip is not None:
+            if count < args.skip:
+                continue
+        print('downloading...' + ticker, '-', count)
         filename = args.output_dir + ticker + '.csv'
 
         price_url = 'http://download.macrotrends.net/assets/php/stock_data_export.php?t=' + ticker

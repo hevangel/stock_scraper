@@ -7,13 +7,21 @@ import sys
 import yfinance as yf
 import glob
 import os
+import time
+
+scrap_delay = 2
 
 def main():
     parser = argparse.ArgumentParser(description='scrap yahoo earning')
     parser.add_argument('-input_dir', type=str, help='input directory, use the latest file')
     parser.add_argument('-input_file', type=str, default='data_tickers/yahoo_indexes.csv', help='input file')
     parser.add_argument('-output_dir', type=str, default='../stock_data/raw_history_yahoo/', help='output directory')
+    parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
+
+    args.skip = 280
+
+    args.input_file = 'data_tickers/etfs_info.csv'
 
     if args.input_dir is not None:
         list_of_files = glob.glob(args.input_dir + '/*')
@@ -25,10 +33,19 @@ def main():
     df_input.set_index('Ticker', inplace=True)
 
     for count,ticker in enumerate(df_input.index):
-        print('downloading...' + ticker)
-        data = yf.download(ticker, period='max', auto_adjust=False, prepost=True)
+        if args.skip is not None:
+            if count < args.skip:
+                continue
+        print('downloading...' + ticker, '-', count)
+        try:
+            data = yf.download(ticker, period='max', auto_adjust=False, prepost=True)
+        except:
+            print('download failed, retry')
+            time.sleep(30)
+            data = yf.download(ticker, period='max', auto_adjust=False, prepost=True)
+
         data.to_csv(args.output_dir + ticker + '.csv')
 
 if __name__ == "__main__":
-    sys.exit(main())
-
+    status = main()
+    sys.exit(0 if status is None else status)

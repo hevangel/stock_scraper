@@ -1,0 +1,67 @@
+pipeline {
+    agent {
+        node {
+            label 'linux'
+            customWorkspace "${env.HOME}/workspace/stock_scrapper"
+        }
+    }
+    triggers {
+        cron('H 14 * * 1-5')
+    }
+    stages {
+        stage('fetch') {
+            steps {
+                dir('../stock_data') {
+                    git url: 'git@github.com:hevangel/stock_data.git', credentialsId: 'git-hevangel'
+                }
+            }
+        }
+        stage('scrap') {
+            steps {
+                sh 'python3 -m venv --system-site-packages venv'
+                withPythonEnv("${WORKSPACE}/venv/") {
+                    sh 'pip3 install --upgrade pip'
+                    sh 'pip3 install -r requirements.txt'
+                    sh 'python3 scrap_finviz_screener.py'
+                    sh 'python3 report_finviz.py'
+                }
+            }
+        }
+        stage('archive') {
+            steps {
+                // archiveArtifacts artifacts: '../stock_data/raw_daily_finviz/finviz_${BUILD_TIMESTAMP}.csv', fingerprint: true
+                junit 'daily_report.xml'
+            }
+        }
+        stage('push') {
+            steps {
+                dir('../stock_data') {
+                    sshagent (['git-hevangel']) {
+                        sh 'git pull origin master'
+                        sh 'git add raw_daily_finviz/finviz_${BUILD_TIMESTAMP}.csv'
+                        sh 'git commit --allow-empty -a -m "daily scrap"'
+                        sh 'git push origin HEAD:master'
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'This will always run'
+        }
+        success {
+            echo 'This will run only if successful'
+        }
+        failure {
+            echo 'This will run only if failed'
+        }
+        unstable {
+            echo 'This will run only if the run was marked as unstable'
+        }
+        changed {
+            echo 'This will run only if the state of the Pipeline has changed'
+            echo 'For example, if the Pipeline was previously failing but is now successful'
+        }
+    }
+}
