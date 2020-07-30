@@ -23,6 +23,7 @@ def main():
     args = parser.parse_args()
 
     args.input_file = 'data_tickers/etfs_info.csv'
+    args.skip = 361
 
     df_input = pd.read_csv(args.input_file)
     df_input.set_index('Ticker', inplace=True)
@@ -47,7 +48,8 @@ def main():
             for token in tokens:
                 price_history_row.append(token.split(':"')[1].replace('"',''))
             price_history.append(price_history_row)
-        df = pd.DataFrame(price_history, columns=['Date', 'AdjOpen', 'AdjHigh', 'AdjLow', 'AdjClose', 'Volume', 'MA50', 'MA200'])
+        columns = ['Date', 'AdjOpen', 'AdjHigh', 'AdjLow', 'AdjClose', 'Volume', 'MA50', 'MA200']
+        df = pd.DataFrame(price_history, columns=columns[:len(tokens)])
         df.set_index('Date', inplace=True)
 
         # scrap split history
