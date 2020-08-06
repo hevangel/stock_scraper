@@ -14,8 +14,6 @@ def main():
     parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
 
-    args.skip = 264
-
     if args.input_file == None:
         args.input_file = [
             # 'data_tickers/all_tickers.csv',
@@ -42,12 +40,18 @@ def main():
         print('downloading...', ticker, '-', count)
         api_key = api_key_list[count % len(api_key_list)]
         url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol='+ticker+'&apikey='+api_key+'&outputsize=full&datatype=csv'
-        try:
-            wget.download(url, out=args.output_dir)
-        except:
-            print('download failed, retry')
-            time.sleep(30)
-            wget.download(url, out=args.output_dir)
+
+        wget_ok = False
+        max_retry = 3
+        for retry in range(max_retry):
+            try:
+                wget.download(url, out=args.output_dir, bar=False)
+                wget_ok = True
+            except:
+                print('download failed, retry: ', retry)
+                time.sleep((retry+1) * 60)
+            if wget_ok == True:
+                break
 
         time.sleep(scrap_delay)
 

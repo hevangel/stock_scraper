@@ -23,8 +23,6 @@ def main():
     args = parser.parse_args()
 
     args.input_file = 'data_tickers/etfs_info.csv'
-    args.skip = 361
-
     df_input = pd.read_csv(args.input_file)
     df_input.set_index('Ticker', inplace=True)
 
@@ -34,6 +32,7 @@ def main():
                 continue
         print('downloading...' + ticker, '-', count)
         filename = args.output_dir + ticker + '.csv'
+        df = None
 
         # scrap price history
         price_url ='https://www.macrotrends.net/assets/php/stock_price_history.php?t=' + ticker
@@ -41,16 +40,17 @@ def main():
         price_soup = bs4.BeautifulSoup(price_page, 'lxml')
         price_scripts = price_soup.find_all('script')[8]
         price_pattern = re.search('dataDaily = \[{(.*)}\];', str(price_scripts))
-        price_history = []
-        for price_row in price_pattern.group(1).split('},{'):
-            tokens = price_row.split('","')
-            price_history_row = []
-            for token in tokens:
-                price_history_row.append(token.split(':"')[1].replace('"',''))
-            price_history.append(price_history_row)
-        columns = ['Date', 'AdjOpen', 'AdjHigh', 'AdjLow', 'AdjClose', 'Volume', 'MA50', 'MA200']
-        df = pd.DataFrame(price_history, columns=columns[:len(tokens)])
-        df.set_index('Date', inplace=True)
+        if price_pattern is not None:
+            price_history = []
+            for price_row in price_pattern.group(1).split('},{'):
+                tokens = price_row.split('","')
+                price_history_row = []
+                for token in tokens:
+                    price_history_row.append(token.split(':"')[1].replace('"',''))
+                price_history.append(price_history_row)
+            columns = ['Date', 'AdjOpen', 'AdjHigh', 'AdjLow', 'AdjClose', 'Volume', 'MA50', 'MA200']
+            df = pd.DataFrame(price_history, columns=columns[:len(tokens)])
+            df.set_index('Date', inplace=True)
 
         # scrap split history
         split_url ='https://www.macrotrends.net/assets/php/stock_splits.php?t=' + ticker
@@ -58,16 +58,17 @@ def main():
         split_soup = bs4.BeautifulSoup(split_page, 'lxml')
         split_scripts = split_soup.find_all('script')[4]
         split_pattern = re.search('dataDaily = \[{(.*)}\];', str(split_scripts))
-        split_history = []
-        for split_row in split_pattern.group(1).split('},{'):
-            tokens = split_row.split('","')
-            split_history_row = []
-            for token in tokens:
-                split_history_row.append(token.split(':"')[1].replace('"',''))
-            split_history.append(split_history_row)
-        df_split = pd.DataFrame(split_history, columns=['Date', 'Close'])
-        df_split.set_index('Date', inplace=True)
-        df['Close'] = df_split['Close']
+        if split_pattern is not None:
+            split_history = []
+            for split_row in split_pattern.group(1).split('},{'):
+                tokens = split_row.split('","')
+                split_history_row = []
+                for token in tokens:
+                    split_history_row.append(token.split(':"')[1].replace('"',''))
+                split_history.append(split_history_row)
+            df_split = pd.DataFrame(split_history, columns=['Date', 'Close'])
+            df_split.set_index('Date', inplace=True)
+            df['Close'] = df_split['Close']
 
         # download CSV, 200 limits per month
         #price_url = 'http://download.macrotrends.net/assets/php/stock_data_export.php?t=' + ticker
@@ -89,10 +90,10 @@ def main():
             df_mktcap.set_index('Date',inplace=True)
             df['MarketCap'] = df_mktcap['MarketCap']
 
-        df.to_csv(filename)
+        if df is not None:
+            df.to_csv(filename)
 
-        time.sleep(scrap_delay)
-
+        #time.sleep(scrap_delay)
 
 if __name__ == "__main__":
     status = main()

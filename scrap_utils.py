@@ -5,6 +5,7 @@ import cloudscraper
 import pandas as pd
 import bs4
 from pandas.tseries.offsets import BDay
+import datetime
 
 use_cloudscrapper = False
 scrapper = None
@@ -70,3 +71,12 @@ def df_to_csv(df, output_prefix, start_date, end_date):
         df.insert(0, 'End Date', end_date, True)
         filename = output_prefix + start_date + '_' + end_date + '.csv'
     df.to_csv(filename)
+
+# get the next weekday from a date
+def onDay(date, day):
+    """
+    :param date: current date
+    :param day: next monday(0) - sunday(6)
+    :return:
+    """
+    return date + datetime.timedelta(days=(day-date.weekday()+7)%7)
