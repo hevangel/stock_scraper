@@ -16,7 +16,7 @@ from scrap_utils import *
 # hand crafted scrapper
 # -----------------------------------------------------------------
 bonds_url = 'https://markets.businessinsider.com/bonds/finder?borrower=&maturity=&yield=&bondtype=6,7,8,19&coupon=&currency=333&rating=&country=18'
-scrap_delay = 1
+scrap_delay = 10
 
 def get_bonds_table(page):
     page_url = bonds_url + '&p=' + str(page)
@@ -28,7 +28,7 @@ def get_bonds_table(page):
 
 def main():
     parser = argparse.ArgumentParser(description='scrap finviz screener')
-    parser.add_argument('-output_prefix', type=str, default='../stock_data/raw_bonds/bonds_', help='prefix of the output file')
+    parser.add_argument('-output_prefix', type=str, default='../stock_data/raw_bonds_bi/bonds_', help='prefix of the output file')
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
     parser.add_argument('-output', type=str, help='output file')
     args = parser.parse_args()
