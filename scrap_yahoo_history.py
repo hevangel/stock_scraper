@@ -20,6 +20,7 @@ def main():
     args = parser.parse_args()
 
     args.input_file = 'data_tickers/etfs_info.csv'
+    args.skip = 2282
 
     if args.input_dir is not None:
         list_of_files = glob.glob(args.input_dir + '/*')
@@ -50,12 +51,16 @@ def main():
             time.sleep(30)
             yf_ticker = yf.Ticker(ticker)
 
-        dividends = yf_ticker.dividends
-        splits = yf_ticker.splits
-        if dividends is not None:
-            data['Dividend'] = dividends
-        if splits is not None:
-            data['Split'] = splits
+        try:
+            dividends = yf_ticker.dividends
+            splits = yf_ticker.splits
+            if dividends is not None:
+                data['Dividend'] = dividends
+            if splits is not None:
+                data['Split'] = splits
+        except:
+            print('dividend or split download failed')
+
         data.to_csv(args.output_dir + ticker + '.csv')
 
         time.sleep(scrap_delay)
