@@ -80,6 +80,7 @@ def main():
         print('numbers of ETF:', len(tickers))
         start_date = datetime.datetime(args.scrap_year,args.start_month,args.start_day)
         end_date = datetime.datetime(args.scrap_year,12,31)
+        end_date = datetime.datetime(args.scrap_year,7,8)
         prev_market_date = scrap_utils.get_prev_market_date(date.today())
         if end_date.date() > prev_market_date:
             end_date = prev_market_date

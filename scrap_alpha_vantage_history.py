@@ -16,6 +16,8 @@ def main():
     parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
 
+    args.skip = 2538 
+
     if args.input_file == None:
         args.input_file = [
             # 'data_tickers/all_tickers.csv',
