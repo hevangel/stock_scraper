@@ -18,7 +18,7 @@ def main():
     df_input.set_index('Ticker', inplace=True)
     ticker_list = df_input.index
 
-    ticker_list = ['SPY','QQQ','USO','GDX']
+    ticker_list = ['GLD']#['SPY','QQQ','USO','GDX']
 
     for count,ticker in enumerate(ticker_list):
         print('cleaning...',ticker,'-',count)
@@ -101,6 +101,7 @@ def main():
         # Output CSV files
         df_out = df['Data'].copy()
         df_ff = pd.read_csv('../stock_data/temp/' + ticker + '.csv', index_col=1, names=['File','Date','FundFlow'], parse_dates=True)
+        df_ff = df_ff[~df_ff.index.duplicated()]
         df_out['FundFlow'] = df_ff[:df.index[-1]]['FundFlow']
         df_out.to_csv(args.output_dir + ticker + '.csv')
 
