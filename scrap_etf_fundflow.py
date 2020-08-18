@@ -40,12 +40,12 @@ def get_etf_fundflow_all_tickers(tickers, start_date, end_date):
 
     df_pages = []
     for page,tickers_page in enumerate(tickers_list):
-        print('scraping page', page)
+        print('scraping page', page, '-', tickers_page)
         tickers = ','.join(tickers_page)
-        df_pages.append(get_etf_fundflow_page(tickers,start_date,end_date))
+        #df_pages.append(get_etf_fundflow_page(tickers,start_date,end_date))
 
-    df_merged = pd.concat(df_pages)
-    return df_merged
+    #df_merged = pd.concat(df_pages)
+    #return df_merged
 
 
 

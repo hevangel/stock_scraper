@@ -18,7 +18,7 @@ def main():
     df_input.set_index('Ticker', inplace=True)
     ticker_list = df_input.index
 
-    ticker_list = ['']
+    ticker_list = ['SPY','QQQ','USO','GDX']
 
     for count,ticker in enumerate(ticker_list):
         print('cleaning...',ticker,'-',count)
@@ -56,38 +56,47 @@ def main():
         df = pd.DataFrame(index=date_clean, columns=columns)
         df.index.name = 'Date'
 
-        # Clean up raw data
-        df_raw['Macrotrends']['Dividend'] = 0.0
+        # Fix split factor
         df_raw['Macrotrends']['SplitFactor'] = df_raw['Macrotrends']['Close'] / df_raw['Macrotrends']['AdjClose']
         df_raw['Macrotrends']['Split'] = df_raw['Macrotrends']['SplitFactor'].shift(1) / df_raw['Macrotrends']['SplitFactor']
         df_raw['Macrotrends']['Split'].fillna(1.0, inplace=True)
-        df_raw['Macrotrends']['Open'] = df_raw['Macrotrends']['AdjOpen'] * df_raw['Macrotrends']['SplitFactor']
-        df_raw['Macrotrends']['High'] = df_raw['Macrotrends']['AdjHigh'] * df_raw['Macrotrends']['SplitFactor']
-        df_raw['Macrotrends']['Low'] = df_raw['Macrotrends']['AdjLow'] * df_raw['Macrotrends']['SplitFactor']
+        df_raw['Yahoo']['Split'].fillna(1.0, inplace=True)
 
-        df_raw['AlphaVantage']['SplitFactor'] = df_raw['AlphaVantage']['Split'].cumprod().shift(1, fill_value=1.0)
-        df_raw['AlphaVantage']['AdjOpen'] = df_raw['AlphaVantage']['Open'] / df_raw['AlphaVantage']['SplitFactor']
-        df_raw['AlphaVantage']['AdjHigh'] = df_raw['AlphaVantage']['High'] / df_raw['AlphaVantage']['SplitFactor']
-        df_raw['AlphaVantage']['AdjLow'] = df_raw['AlphaVantage']['Low'] / df_raw['AlphaVantage']['SplitFactor']
-        df_raw['AlphaVantage']['AdjClose'] = df_raw['AlphaVantage']['Close'] / df_raw['AlphaVantage']['SplitFactor']
+        for source in df_raw.keys():
+            df[(source, 'Split')] = df_raw[source]['Split']
+        df[('Data','Split')] = df[[('Macrotrends','Split'),('AlphaVantage','Split'),('Yahoo','Split')]].mode(axis=1)[0]
+        df[('Data','SplitFactor')] = df[('Data','Split')][::-1].cumprod().shift(1, fill_value=1.0)
+
+        # Clean up raw data
+        df_raw['Macrotrends']['Dividend'] = 0.0
+        for field in ['AdjOpen','AdjHigh','AdjLow','AdjClose']:
+            df_raw['Macrotrends'][field].where(df_raw['Macrotrends']['SplitFactor'] == df[('Data','SplitFactor')], df_raw['Macrotrends'][field] / df[('Data','SplitFactor')], inplace=True)
+        df_raw['Macrotrends']['Open'] = df_raw['Macrotrends']['AdjOpen'] * df[('Data','SplitFactor')]
+        df_raw['Macrotrends']['High'] = df_raw['Macrotrends']['AdjHigh'] * df[('Data','SplitFactor')]
+        df_raw['Macrotrends']['Low'] = df_raw['Macrotrends']['AdjLow'] * df[('Data','SplitFactor')]
+
+        df_raw['AlphaVantage']['AdjOpen'] = df_raw['AlphaVantage']['Open'] / df[('Data','SplitFactor')]
+        df_raw['AlphaVantage']['AdjHigh'] = df_raw['AlphaVantage']['High'] / df[('Data','SplitFactor')]
+        df_raw['AlphaVantage']['AdjLow'] = df_raw['AlphaVantage']['Low'] / df[('Data','SplitFactor')]
+        df_raw['AlphaVantage']['AdjClose'] = df_raw['AlphaVantage']['Close'] / df[('Data','SplitFactor')]
 
         df_raw['Yahoo']['Dividend'].fillna(0.0, inplace=True)
-        df_raw['Yahoo']['Split'].fillna(1.0, inplace=True)
-        df_raw['Yahoo']['SplitFactor'] = df_raw['Yahoo']['Split'][::-1].cumprod().shift(1, fill_value=1.0)
-        df_raw['Yahoo']['Open'] = df_raw['Yahoo']['AdjOpen'] * df_raw['Yahoo']['SplitFactor']
-        df_raw['Yahoo']['High'] = df_raw['Yahoo']['AdjHigh'] * df_raw['Yahoo']['SplitFactor']
-        df_raw['Yahoo']['Low'] = df_raw['Yahoo']['AdjLow'] * df_raw['Yahoo']['SplitFactor']
-        df_raw['Yahoo']['Close'] = df_raw['Yahoo']['AdjClose'] * df_raw['Yahoo']['SplitFactor']
+        df_raw['Yahoo']['Open'] = df_raw['Yahoo']['AdjOpen'] * df[('Data','SplitFactor')]
+        df_raw['Yahoo']['High'] = df_raw['Yahoo']['AdjHigh'] * df[('Data','SplitFactor')]
+        df_raw['Yahoo']['Low'] = df_raw['Yahoo']['AdjLow'] * df[('Data','SplitFactor')]
+        df_raw['Yahoo']['Close'] = df_raw['Yahoo']['AdjClose'] * df[('Data','SplitFactor')]
 
         # Copy and merge columns
-        for field in fields:
-            print()
+        for field in ['Open', 'High', 'Low', 'Close', 'AdjOpen', 'AdjHigh', 'AdjLow', 'AdjClose', 'Volume', 'Dividend']:
+            print('  Merging ', field)
             merge_columns = []
             for source in df_raw.keys():
-                print('  Merging ', field)
                 df[(source,field)] = df_raw[source][field]
                 merge_columns.append((source,field))
-            df[('Data',field)] = df[merge_columns].round(2).mode(axis=1)[0]
+            df_mode = df[merge_columns].round(2).mode(axis=1)
+            df[('Data', field)] = df_mode[0]
+            if len(df_mode.columns) > 2:
+                print(df_mode[df_mode[2].notna()])
 
         # Output CSV files
         df_out = df['Data'].copy()
