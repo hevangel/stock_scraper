@@ -30,6 +30,7 @@ pipeline {
         //}
         stage('deploy') {
             steps {
+                sh 'git pull origin master'
                 sh 'git add data_tickers/*.csv'
                 sh 'git commit --allow-empty -a -m "check in"'
                 sshagent (['git-hevangel']) {
