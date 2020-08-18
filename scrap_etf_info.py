@@ -27,7 +27,8 @@ def get_etf_info(ticker):
     soup = bs4.BeautifulSoup(page, 'lxml')
     row_dict = {}
     row_dict['Ticker'] = ticker
-    row_dict['Description'] = soup.find_all('h1')[0].find_next('div').next_sibling.replace('\n','')
+    h1 = soup.find_all('h1')
+    row_dict['Description'] = h1[0].find_next('div').next_sibling.replace('\n','')
     h3 = soup.find_all('h3')
     for i in range(3):
         for li in h3[i].find_next('ul').find_all('li'):
@@ -113,24 +114,19 @@ def main():
     etfdb_list = set(df_etfdb.index.to_list())
     common_etf_list = etfcom_list & etfdb_list
 
-    df = pd.read_csv(args.output)
-
     row_dict_list = []
     for i,ticker in enumerate(sorted(common_etf_list)):
-        if i < 2081:
-            continue
         print('get_etf_info',i,ticker)
-        row_dict = get_etf_info(ticker)
+        try:
+            row_dict = get_etf_info(ticker)
+        except:
+            print('scrap fail - try again')
+            time.sleep(30)
+            row_dict = get_etf_info(ticker)
         if row_dict is not None:
             row_dict_list.append(row_dict)
-        if i % 10 == 0:
-            df2 = pd.DataFrame(row_dict_list)
-            df = df.append(df2)
-            df.to_csv(args.output)
-            row_dict_list = []
 
-    df2 = pd.DataFrame(row_dict_list)
-    df = df.append(df2)
+    df = pd.DataFrame(row_dict_list)
     df.set_index('Ticker', inplace=True)
     df.to_csv(args.output)
 

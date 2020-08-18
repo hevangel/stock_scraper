@@ -40,12 +40,12 @@ def get_etf_fundflow_all_tickers(tickers, start_date, end_date):
 
     df_pages = []
     for page,tickers_page in enumerate(tickers_list):
-        print('scraping page', page)
+        print('scraping page', page, '-', tickers_page)
         tickers = ','.join(tickers_page)
-        df_pages.append(get_etf_fundflow_page(tickers,start_date,end_date))
+        #df_pages.append(get_etf_fundflow_page(tickers,start_date,end_date))
 
-    df_merged = pd.concat(df_pages)
-    return df_merged
+    #df_merged = pd.concat(df_pages)
+    #return df_merged
 
 
 
@@ -80,6 +80,7 @@ def main():
         print('numbers of ETF:', len(tickers))
         start_date = datetime.datetime(args.scrap_year,args.start_month,args.start_day)
         end_date = datetime.datetime(args.scrap_year,12,31)
+        end_date = datetime.datetime(args.scrap_year,7,8)
         prev_market_date = scrap_utils.get_prev_market_date(date.today())
         if end_date.date() > prev_market_date:
             end_date = prev_market_date

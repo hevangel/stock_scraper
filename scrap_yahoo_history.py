@@ -20,6 +20,7 @@ def main():
     args = parser.parse_args()
 
     args.input_file = 'data_tickers/etfs_info.csv'
+    args.skip = 2282
 
     if args.input_dir is not None:
         list_of_files = glob.glob(args.input_dir + '/*')
@@ -29,20 +30,40 @@ def main():
 
     df_input = pd.read_csv(input_file)
     df_input.set_index('Ticker', inplace=True)
+    ticker_list = df_input.index
 
-    for count,ticker in enumerate(df_input.index):
+    for count,ticker in enumerate(ticker_list):
         if args.skip is not None:
             if count < args.skip:
                 continue
         print('downloading...' + ticker, '-', count)
         try:
-            data = yf.download(ticker, period='max', auto_adjust=False, prepost=True)
+            data = yf.download(ticker, period='max', auto_adjust=False, prepost=False)
         except:
             print('download failed, retry')
             time.sleep(30)
-            data = yf.download(ticker, period='max', auto_adjust=False, prepost=True)
+            data = yf.download(ticker, period='max', auto_adjust=False, prepost=False)
+
+        try:
+            yf_ticker = yf.Ticker(ticker)
+        except:
+            print('ticker get failed, retry')
+            time.sleep(30)
+            yf_ticker = yf.Ticker(ticker)
+
+        try:
+            dividends = yf_ticker.dividends
+            splits = yf_ticker.splits
+            if dividends is not None:
+                data['Dividend'] = dividends
+            if splits is not None:
+                data['Split'] = splits
+        except:
+            print('dividend or split download failed')
 
         data.to_csv(args.output_dir + ticker + '.csv')
+
+        time.sleep(scrap_delay)
 
 if __name__ == "__main__":
     status = main()

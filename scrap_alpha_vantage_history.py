@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 import wget
 import argparse
@@ -13,6 +15,8 @@ def main():
     parser.add_argument('-output_dir', type=str, default='../stock_data/raw_history_alpha_vantage/', help='output directory')
     parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
+
+    args.skip = 2538 
 
     if args.input_file == None:
         args.input_file = [
