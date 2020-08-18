@@ -73,7 +73,7 @@ def main():
 
         tickers = df_etf_list['Ticker'].to_list()
         df = get_etf_fundflow_all_tickers(tickers, args.start_date, args.end_date)
-        df_to_csv(df, args.output_prefix, args.start_date, args.end_date)
+        df.to_csv(df, args.output_prefix, args.start_date, args.end_date)
 
     else:
         tickers = df_etf_list[pd.to_datetime(df_etf_list['Inception']) < datetime.datetime(args.scrap_year+1,1,1)]['Ticker'].to_list()
