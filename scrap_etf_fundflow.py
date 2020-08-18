@@ -71,14 +71,13 @@ def main():
 
         tickers = df_etf_list['Ticker'].to_list()
         df = get_etf_fundflow_all_tickers(tickers, args.start_date, args.end_date)
-        df.to_csv(df, args.output_prefix, args.start_date, args.end_date)
+        df_to_csv(df, args.output_prefix, args.start_date, args.end_date)
 
     else:
         tickers = df_etf_list[pd.to_datetime(df_etf_list['Inception']) < datetime.datetime(args.scrap_year+1,1,1)]['Ticker'].to_list()
         print('numbers of ETF:', len(tickers))
         start_date = datetime.datetime(args.scrap_year,args.start_month,args.start_day)
         end_date = datetime.datetime(args.scrap_year,12,31)
-        end_date = datetime.datetime(args.scrap_year,7,8)
         prev_market_date = scrap_utils.get_prev_market_date(date.today())
         if end_date.date() > prev_market_date:
             end_date = prev_market_date
