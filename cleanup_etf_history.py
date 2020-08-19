@@ -18,8 +18,7 @@ def main():
     df_input.set_index('Ticker', inplace=True)
     ticker_list = df_input.index
 
-    ticker_list = ['GLD']#['SPY','QQQ','USO','GDX']
-
+    ticker_list = ['MDY']
     for count,ticker in enumerate(ticker_list):
         print('cleaning...',ticker,'-',count)
         df_raw = {}
@@ -70,7 +69,8 @@ def main():
         # Clean up raw data
         df_raw['Macrotrends']['Dividend'] = 0.0
         for field in ['AdjOpen','AdjHigh','AdjLow','AdjClose']:
-            df_raw['Macrotrends'][field].where(df_raw['Macrotrends']['SplitFactor'] == df[('Data','SplitFactor')], df_raw['Macrotrends'][field] / df[('Data','SplitFactor')], inplace=True)
+            df_raw['Macrotrends'][field].where(df_raw['Macrotrends']['SplitFactor'] == df[df_raw['Macrotrends'].index[0]:df_raw['Macrotrends'].index[-1]][('Data','SplitFactor')],
+                                               df_raw['Macrotrends'][field] / df[('Data','SplitFactor')], inplace=True)
         df_raw['Macrotrends']['Open'] = df_raw['Macrotrends']['AdjOpen'] * df[('Data','SplitFactor')]
         df_raw['Macrotrends']['High'] = df_raw['Macrotrends']['AdjHigh'] * df[('Data','SplitFactor')]
         df_raw['Macrotrends']['Low'] = df_raw['Macrotrends']['AdjLow'] * df[('Data','SplitFactor')]
