@@ -21,7 +21,7 @@ pipeline {
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt --upgrade'
-                    sh 'python scrap_etf_info.py'
+                    //sh 'python scrap_etf_info.py'
                 }
             }
         }
