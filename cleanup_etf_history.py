@@ -26,9 +26,8 @@ def main():
         'AlphaVantage': 'raw_history_alpha_vantage'
     }
 
-    ticker_list = ['USO','FAZ','FAS','FCG','FJP']
     for count,ticker in enumerate(ticker_list):
-        print('cleaning...',ticker,'-',count)
+        print('=== cleaning...',ticker,'-',count,'===')
 
         df_raw = {}
         for k,v in source_list.items():
@@ -112,13 +111,12 @@ def main():
             if df_split_diff.any():
                 print('Fixing split error for', source)
                 if source == 'Macrotrends':
-                    print('Fixed')
                     for field in ['Open', 'High', 'Low', 'Close']:
                         df[('Macrotrends','Adj'+field)] = df[('Macrotrends',field)] / df[('Data','SplitFactor')]
 
         # Merge columns
         for field in ['Open', 'High', 'Low', 'Close', 'AdjOpen', 'AdjHigh', 'AdjLow', 'AdjClose', 'Volume', 'Dividend']:
-            print('  Merging ', field)
+            print('Merging ', field)
             df_mode = df[itertools.product(df_raw.keys(),[field])].round(2).mode(axis=1)
             if len(df_mode.columns) > 2:
                 print('No majority:\n', df_mode[df_mode[1].notna()])
