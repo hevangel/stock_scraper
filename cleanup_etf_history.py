@@ -14,6 +14,7 @@ def main():
     parser = argparse.ArgumentParser(description='clean up ETF history')
     parser.add_argument('-input', type=str, default='data_tickers/etfs_info.csv', help='input file')
     parser.add_argument('-output_dir', type=str, default='../stock_data/data_etf/', help='output directory')
+    parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
 
     df_input = pd.read_csv(args.input, comment='#')
@@ -27,6 +28,9 @@ def main():
     }
 
     for count,ticker in enumerate(ticker_list):
+        if args.skip is not None:
+            if count < args.skip:
+                continue
         print('=== cleaning...',ticker,'-',count,'===')
 
         df_raw = {}
@@ -45,7 +49,7 @@ def main():
         df_raw_dates = []
         for source in df_raw:
             df_raw_dates.append(set(df_raw[source].index.to_list()))
-        clean_dates = sorted(set.union(*df_raw_dates))
+        clean_dates = sorted(set.union(*df_raw_dates))[:-2]
         df = pd.DataFrame(index=clean_dates, columns=columns)
         df.index.name = 'Date'
 
@@ -58,7 +62,7 @@ def main():
                 'Close': 'AdjClose',
             }, inplace=True)
             df_raw['Yahoo']['Split'].fillna(1.0, inplace=True)
-            df_raw['Yahoo']['SplitFactor'] = df_raw['Yahoo']['Split'][::-1].cumprod().shift(1)
+            df_raw['Yahoo']['SplitFactor'] = df_raw['Yahoo']['Split'][::-1].cumprod().shift(1, fill_value=1.0)
             df_raw['Yahoo']['Open'] = df_raw['Yahoo']['AdjOpen'] * df_raw['Yahoo']['SplitFactor']
             df_raw['Yahoo']['High'] = df_raw['Yahoo']['AdjHigh'] * df_raw['Yahoo']['SplitFactor']
             df_raw['Yahoo']['Low'] = df_raw['Yahoo']['AdjLow'] * df_raw['Yahoo']['SplitFactor']
@@ -77,7 +81,7 @@ def main():
                 'dividend_amount' : 'Dividend',
                 'split_coefficient' : 'Split',
             }, inplace=True)
-            df_raw['AlphaVantage']['SplitFactor'] = df_raw['AlphaVantage']['Split'].cumprod().shift(1)
+            df_raw['AlphaVantage']['SplitFactor'] = df_raw['AlphaVantage']['Split'].cumprod().shift(1, fill_value=1.0)
             df_raw['AlphaVantage']['AdjOpen'] = df_raw['AlphaVantage']['Open'] / df_raw['AlphaVantage']['SplitFactor']
             df_raw['AlphaVantage']['AdjHigh'] = df_raw['AlphaVantage']['High'] / df_raw['AlphaVantage']['SplitFactor']
             df_raw['AlphaVantage']['AdjLow'] = df_raw['AlphaVantage']['Low'] / df_raw['AlphaVantage']['SplitFactor']
@@ -98,16 +102,16 @@ def main():
                 df[(source, field)] = df_raw[source][field]
 
         # Merge and clean up raw data
-        print('  Merging Split')
-        df_split_mode = df[itertools.product(df_raw.keys(),['Split'])].mode(axis=1)
-        if len(df_split_mode.columns) > 1:
-            print('Split - no majority:', df_split_mode[df_split_mode[2].notna()])
+        print('Merging Split')
+        df_split_mode = df[itertools.product(df_raw.keys(),['Split'])].round(4).mode(axis=1)
+        if len(df_split_mode.columns) > 2:
+            print('Split - no majority:\n', df_split_mode[df_split_mode[2].notna()])
         df[('Data','Split')] = df_split_mode[0]
         df[('Data','SplitFactor')] = df[('Data','Split')][::-1].cumprod().shift(1, fill_value=1.0)
 
         # Fix the missing split
         for source in df_raw.keys():
-            df_split_diff = df[('Data', 'Split')] != df[(source, 'Split')]
+            df_split_diff = (~ np.isclose(df[('Data', 'Split')],df[(source, 'Split')])) & df[(source, 'Split')].notna()
             if df_split_diff.any():
                 print('Fixing split error for', source)
                 if source == 'Macrotrends':
