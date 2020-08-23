@@ -124,7 +124,7 @@ def main():
             df_mode = df[itertools.product(df_raw.keys(),[field])].round(2).mode(axis=1)
             if len(df_mode.columns) > 2:
                 print('No majority:\n', df_mode[df_mode[1].notna()])
-                df_mode[0] = df_mode[df_mode[1].notna()].median(axis=1)
+                df_mode[df_mode[1].notna()][0] = df_mode[df_mode[1].notna()].median(axis=1)
             df[('Data', field)] = df_mode[0]
 
         # Output CSV files
