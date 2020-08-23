@@ -27,6 +27,7 @@ def main():
         'AlphaVantage': 'raw_history_alpha_vantage'
     }
 
+    ticker_list = ['SDOW']
     for count,ticker in enumerate(ticker_list):
         if args.skip is not None:
             if count < args.skip:
@@ -124,13 +125,15 @@ def main():
             df_mode = df[itertools.product(df_raw.keys(),[field])].round(2).mode(axis=1)
             if len(df_mode.columns) > 2:
                 print('No majority:\n', df_mode[df_mode[1].notna()])
-                df_mode[df_mode[1].notna()][0] = df_mode[df_mode[1].notna()].median(axis=1)
+                df_mode.loc[df_mode[1].notna(),0] = df_mode[df_mode[1].notna()].median(axis=1)
             df[('Data', field)] = df_mode[0]
 
         # Output CSV files
         df_out = df['Data'].copy()
         df_ff = pd.read_csv('../stock_data/temp/' + ticker + '.csv', index_col=1, names=['File','Date','FundFlow'], parse_dates=True)
         df_ff = df_ff[~df_ff.index.duplicated()]
+        df_out['FundFlow'] = df_ff.loc[set(df.index) & set(df_ff.index)]['FundFlow']
+
         df_out['FundFlow'] = df_ff[:df.index[-1]]['FundFlow']
         df_out.to_csv(args.output_dir + ticker + '.csv')
 
