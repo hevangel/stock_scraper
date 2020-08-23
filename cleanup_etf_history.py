@@ -27,7 +27,6 @@ def main():
         'AlphaVantage': 'raw_history_alpha_vantage'
     }
 
-    ticker_list = ['SDOW']
     for count,ticker in enumerate(ticker_list):
         if args.skip is not None:
             if count < args.skip:
