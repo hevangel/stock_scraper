@@ -28,10 +28,10 @@ pipeline {
         stage('push') {
             steps {
                 dir('../stock_data') {
-                    sh 'git pull origin master'
-                    sh 'git add raw_bonds_bi/*.csv'
-                    sh 'git commit --allow-empty -a -m "weekly scrap"'
                     sshagent (['git-hevangel']) {
+                        sh 'git pull origin master'
+                        sh 'git add raw_bonds_bi/*.csv'
+                        sh 'git commit --allow-empty -a -m "weekly scrap"'
                         sh 'git push origin HEAD:master'
                     }
                 }
