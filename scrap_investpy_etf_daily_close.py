@@ -32,13 +32,16 @@ def main():
 
     # get ETF info
     etf_info_list = []
-    print('number of traded tickers:', len(df_overview_traded.index), '/', len(df_overview.index))
+    get_etfs_list = investpy.etfs.get_etfs('united states')
+
+    print('number of traded tickers:', len(df_overview_traded.index), '/', len(get_etfs_list.index))
     count = 0
-    for index,row in df_overview_traded.iterrows():
-        print('downloading...', index, '-', count)
+
+    for index,row in get_etfs_list.iterrows():
+        print('downloading...', row['symbol'], '-', count)
         try:
-            etf_info = investpy.get_etf_information(row['Name'],'united states')
-            etf_info['Symbol'] = index
+            etf_info = investpy.get_etf_information(row['name'],'united states')
+            etf_info['Symbol'] = row['symbol']
 
             etf_info_list.append(etf_info)
             time.sleep(scrap_delay)

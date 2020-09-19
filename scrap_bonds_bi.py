@@ -27,7 +27,7 @@ def get_bonds_table(page):
     return pd.read_html(str(bond_table), header=0, index_col=1)[0]
 
 def main():
-    parser = argparse.ArgumentParser(description='scrap finviz screener')
+    parser = argparse.ArgumentParser(description='scrap bond yields from business insider')
     parser.add_argument('-output_prefix', type=str, default='../stock_data/raw_bonds_bi/bonds_', help='prefix of the output file')
     parser.add_argument('-date', type=str, default=str(datetime.date.today()), help='Specify the date')
     parser.add_argument('-output', type=str, help='output file')
