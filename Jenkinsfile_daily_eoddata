@@ -31,7 +31,7 @@ pipeline {
         stage('push') {
             steps {
                 dir('../stock_data') {
-                    sh 'git add raw_daily_eoddata/*.csv'
+                    sh 'git add raw_daily_eoddata/eoddata_${BUILD_TIMESTAMP}.csv'
                     sh 'git commit --allow-empty -a -m "daily scrap"'
                     sshagent (['git-hevangel']) {
                         sh 'git push origin HEAD:master'
