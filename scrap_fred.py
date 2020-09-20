@@ -24,8 +24,13 @@ def main():
         for row in fredreader:
             filename = args.output_prefix + row[0] + '.csv'
             print('Getting', row[0], '-', row[1])
-            s = fred.get_series(row[0])
-            s.to_csv(filename)
+            try:
+                s = fred.get_series(row[0])
+                s.to_csv(filename)
+            except:
+                print('failed')
+
+    return 0
 
 if __name__ == "__main__":
     sys.exit(main())
