@@ -5,6 +5,7 @@ cloudscraper
 bs4
 lxml
 junit-xml
+html5lib
 
 # data analysis packages
 pandas
