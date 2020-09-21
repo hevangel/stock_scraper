@@ -75,14 +75,13 @@ def main():
     driver.close()
 
     # merge csv
-    for d in date_list:
-        df_exchange_list = []
-        for exchange in exchange_list:
-            df_exchange = pd.read_csv(args.output_prefix + exchange + '_' + str(scrap_date.date()) + '.csv', )
-            df_exchange['Exchange'] = exchange
-            df_exchange_list.append(df_exchange)
-        df = pd.concat(df_exchange_list)
-        df.to_csv(args.output_prefix + str(scrap_date.date()) + '.csv', )
+    df_exchange_list = []
+    for exchange in exchange_list:
+        df_exchange = pd.read_csv(args.output_prefix + exchange + '_' + str(scrap_date.date()) + '.csv', )
+        df_exchange['Exchange'] = exchange
+        df_exchange_list.append(df_exchange)
+    df = pd.concat(df_exchange_list)
+    df.to_csv(args.output_prefix + str(scrap_date.date()) + '.csv', )
 
 if __name__ == "__main__":
     status = main()
