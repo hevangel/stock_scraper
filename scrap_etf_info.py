@@ -105,6 +105,8 @@ def main():
     parser.add_argument('-use_headless', action='store_true', help='Use headless mode in Firefox')
     parser.add_argument('-delay', type=int, default=2, help='delay in sec between each URL request')
     parser.add_argument('-no_scrap_etf_list', action='store_true', help='no scrap etf list from etf.com and etfdb')
+    parser.add_argument('-no_scrap_etfdb_info', action='store_true', help='no scrap etf info from etfdb')
+    parser.add_argument('-no_scrap_etfcom_info', action='store_true', help='no scrap etf info from etf.com')
     parser.add_argument('-output_etfcom', type=str, default='data_tickers/etfs_etfcom.csv', help='etf.com etf list output file')
     parser.add_argument('-output_etfdb', type=str, default='data_tickers/etfs_etfdb.csv', help='etfdb etf list output file')
     parser.add_argument('-output_all_etfs', type=str, default='data_tickers/all_etfs.csv', help='all etfs list output file')
@@ -114,12 +116,6 @@ def main():
     parser.add_argument('-output_etfcom_holdings', type=str, default='../stock_data/raw_etfcom_holdings/', help='output directory for eft.com holdings')
     parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
-
-    args.no_scrap_etf_list = True
-    #args.output_etfcom_info = ""
-    args.output_etfdb_info = ""
-    args.use_firefox = True
-    args.use_headless = True
 
     scrap_utils.use_firefox = args.use_firefox
     scrap_utils.use_firefox_headless = args.use_headless
@@ -187,7 +183,7 @@ def main():
         df_all.set_index('Ticker', inplace=True)
 
     # Scrap etfdb info
-    if bool(args.output_etfdb_info):
+    if not args.no_scrap_etfdb:
         etfdb_row_dict_list = []
         for count,ticker in enumerate(df_all.index):
             if args.skip is not None:
@@ -207,7 +203,7 @@ def main():
                 time.sleep(args.delay)
 
     # Scrap etfcom info
-    if bool(args.output_etfcom_info):
+    if not args.no_scrap_etfcom:
         etfcom_row_dict_list = []
         for count, ticker in enumerate(df_all.index):
             if args.skip is not None:
