@@ -228,10 +228,8 @@ PLD,after
 DPZ,before
 WYNN,after
 ADBE,after
-GES,after
 PLAY,after
 BB,after
-HRB,after
 TTM,after
 LZB,after
 STZ,before
@@ -245,3 +243,8 @@ SIX,after
 DE,before
 HD,before
 LOW,before
+CIEN,after
+GSX,before
+FUL,before
+TCOM,after
+
