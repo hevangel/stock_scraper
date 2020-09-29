@@ -21,8 +21,6 @@ pipeline {
                 PATH = "/usr/local/bin:$PATH"
             }
             steps {
-                echo "PATH is: $PATH"
-                sh 'phantomjs --version'
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt --upgrade'
