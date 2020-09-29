@@ -17,6 +17,9 @@ pipeline {
             }
         }
         stage('scrap') {
+            envirnoment {
+                PATH = "/usr/local/bin:$PATH"
+            }
             steps {
                 echo "PATH is: $PATH"
                 sh 'phantomjs --version'
