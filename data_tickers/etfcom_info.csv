@@ -1,2 +1,3 @@
-Ticker,Description,Issuer,Inception Date,Legal Structure,Expense Ratio,Assets Under Management,Average Spread (60-Day),Competing ETFs,Distribution Yield,Next Distribution Date,Index Tracked,Index Weighting Methodology,Index Selection Methodology,Segment Benchmark
-AGQ,ProShares Ultra Silver,ProShares,12/01/08,Commodities Pool,0.95%,$807.06M,0.09%,USLV ,0.00%,09/23/20,Bloomberg Silver Subindex,Single Asset,Single Asset,N/A
+Ticker,Description,Issuer,Brand,Inception Date,Legal Structure,Expense Ratio,Assets Under Management,Average Daily $ Volume,Average Spread (60-Day),Competing ETFs,Duration,Weighted Avg. Maturity,Yield to Maturity,Next Ex-Dividend Date,Number of Holdings,Index Tracked,Index Weighting Methodology,Index Selection Methodology,Segment Benchmark
+AAA,AAF First Priority CLO Bond ETF,Alternative Access Funds LLC,AAF,09/09/20,Open-Ended Fund,0.25%,$7.47M,$337.01K,0.06%,N/A ,--,--,--,N/A,0,No Underlying Index,Proprietary,Proprietary,N/A
+AAAU,AAF First Priority CLO Bond ETF,Alternative Access Funds LLC,AAF,09/09/20,Open-Ended Fund,0.25%,$7.47M,$337.01K,0.06%,N/A ,--,--,--,N/A,0,No Underlying Index,Proprietary,Proprietary,N/A
