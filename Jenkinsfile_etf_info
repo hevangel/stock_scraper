@@ -19,7 +19,7 @@ pipeline {
         stage('scrap') {
             steps {
                 echo "PATH is: $PATH"
-                phantomjs --version
+                sh 'phantomjs --version'
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt --upgrade'
