@@ -183,7 +183,7 @@ def main():
         df_all.set_index('Ticker', inplace=True)
 
     # Scrap etfdb info
-    if not args.no_scrap_etfdb:
+    if not args.no_scrap_etfdb_info:
         etfdb_row_dict_list = []
         for count,ticker in enumerate(df_all.index):
             if args.skip is not None:
@@ -203,7 +203,7 @@ def main():
                 time.sleep(args.delay)
 
     # Scrap etfcom info
-    if not args.no_scrap_etfcom:
+    if not args.no_scrap_etfcom_info:
         etfcom_row_dict_list = []
         for count, ticker in enumerate(df_all.index):
             if args.skip is not None:
