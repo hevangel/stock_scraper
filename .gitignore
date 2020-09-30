@@ -108,3 +108,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+clean_etf.log.aug19
+node_modules/
+phantomjs-2.1.1-linux-x86_64/
+temp/
