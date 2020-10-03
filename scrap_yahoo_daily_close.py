@@ -23,8 +23,8 @@ def main():
     if args.input_file == None:
         args.input_file = [
             'data_tickers/yahoo_indexes.csv',
-            'data_tickers/all_tickers.csv',
-            'data_tickers/etfs_info.csv'
+            'data_tickers/all_stocks.csv',
+            'data_tickers/all_etfs.csv'
         ]
 
     if args.output is None:

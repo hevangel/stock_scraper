@@ -9,4 +9,5 @@ Note:
 The free version only allows  5 API calls per minute with maximium 500 calls per day.  
 Use multiple keys to work around the daily limit
 
+Run PhantomJS:
 export QT_QPA_PLATFORM=offscreen

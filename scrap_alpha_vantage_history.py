@@ -13,15 +13,16 @@ def main():
     parser.add_argument('-api_key_file', type=str, default='../hevangel-com/api_keys/alpha_vantage.txt', help='API key file')
     parser.add_argument('-input_file', type=str, action='append', help='input file')
     parser.add_argument('-output_dir', type=str, default='../stock_data/raw_history_alpha_vantage/', help='output directory')
+    parser.add_argument('-function', type=str, default='TIME_SERIES_DAILY_ADJUSTED', help='API function')
     parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
 
-    args.skip = 2538 
-
+    args.output_dir = '../stock_data_local/raw_intraday_alpha_vantage/'
+    args.function = 'TIME_SERIES_INTRADAY&interval=1min'
     if args.input_file == None:
         args.input_file = [
-            # 'data_tickers/all_tickers.csv',
-            'data_tickers/etfs_info.csv'
+            #'data_tickers/all_etfs.csv'
+            'data_tickers/all_stocks.csv',
         ]
 
     # Read Alpha Vantage API key
@@ -43,7 +44,7 @@ def main():
                 continue
         print('downloading...', ticker, '-', count)
         api_key = api_key_list[count % len(api_key_list)]
-        url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol='+ticker+'&apikey='+api_key+'&outputsize=full&datatype=csv'
+        url = 'https://www.alphavantage.co/query?function='+args.function+'&symbol='+ticker+'&apikey='+api_key+'&outputsize=full&datatype=csv'
 
         wget_ok = False
         max_retry = 3

@@ -37,7 +37,7 @@ def main():
         for k,v in source_list.items():
             csv_file = f"../stock_data/{v}/{ticker}.csv"
             if os.path.exists(csv_file):
-                df_raw[k] = pd.read_csv(f"../stock_data/{v}/{ticker}.csv", index_col=0, parse_dates=True)
+                df_raw[k] = pd.read_csv(csv_file, index_col=0, parse_dates=True)
             else:
                 print('file not found:', csv_file)
 

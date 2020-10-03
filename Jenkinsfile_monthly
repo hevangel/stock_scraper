@@ -18,7 +18,7 @@ pipeline {
                     //sh 'python3 scrap_finviz_screener.py' +
                     //   ' -filter "f=idx_sp500 "-output "data_tickers/all_tickers.csv" -tab "v=111&" -no_report' +
                     //   ' -drop_col "Market Cap" -drop_col "P/E" -drop_col "Price" -drop_col "Change" -drop_col "Volume"'
-                    sh 'python3 scrap_etf_info.py'
+                    //sh 'python3 scrap_etf_info.py'
                  }
             }
         }
@@ -30,10 +30,10 @@ pipeline {
         //}
         stage('deploy') {
             steps {
-                sh 'git pull origin master'
-                sh 'git add data_tickers/*.csv'
-                sh 'git commit --allow-empty -a -m "check in"'
                 sshagent (['git-hevangel']) {
+                    sh 'git pull origin master'
+                    sh 'git add data_tickers/*.csv'
+                    sh 'git commit --allow-empty -a -m "check in"'
                     sh 'git push origin HEAD:master'
                 }
             }

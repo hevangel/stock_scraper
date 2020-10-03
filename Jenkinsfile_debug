@@ -26,18 +26,18 @@ pipeline {
                 }
             }
         }
-        stage('push') {
-            steps {
-                dir('../stock_data') {
-                    sshagent (['git-hevangel']) {
-                        sh 'git pull origin master'
-                        sh 'git add raw_daily_investing_etf/investing_etf_${BUILD_TIMESTAMP}.csv'
-                        sh 'git commit --allow-empty -a -m "daily scrap"'
-                        sh 'git push origin HEAD:master'
-                    }
-                }
-            }
-        }
+        //stage('push') {
+        //    steps {
+        //        dir('../stock_data') {
+        //            sshagent (['git-hevangel']) {
+        //                sh 'git pull origin master'
+        //                sh 'git add raw_daily_investing_etf/investing_etf_${BUILD_TIMESTAMP}.csv'
+        //                sh 'git commit --allow-empty -a -m "daily scrap"'
+        //                sh 'git push origin HEAD:master'
+        //            }
+        //        }
+        //    }
+        //}
     }
     post {
         always {

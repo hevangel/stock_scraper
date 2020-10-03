@@ -11,3 +11,4 @@ df4.to_csv(f"../stock_data/data_cpc/{sheet}.csv")
 
 # Extract ETF fund flow
 # cat ../../stock_scraper/data_tickers/all_etfs.csv | xargs -n 1 -I {} -t sh -c 'grep ^{}, * > ../temp/{}.csv'
+

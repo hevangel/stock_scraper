@@ -24,7 +24,6 @@ result_url = 'https://finra-markets.morningstar.com/BondCenter/Results.jsp'
 bond_search_url = 'https://finra-markets.morningstar.com/bondSearch.jsp'
 scrap_delay = 10
 
-
 def main():
     parser = argparse.ArgumentParser(description='scrap bond yield from finra')
     parser.add_argument('-use_firefox', action='store_true', help='Use firefox instead of phantomjs')
@@ -34,8 +33,8 @@ def main():
     parser.add_argument('-price', type=int, default=70, help='zero to the price range ')
     args = parser.parse_args()
 
-    args.use_firefox = True
-    args.today = True
+    args.use_firefox = False
+    #args.today = True
 
     # initialize web driver
     scrap_utils.use_firefox = args.use_firefox
