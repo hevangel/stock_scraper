@@ -30,7 +30,7 @@ def main():
     last_trade_time = df_overview.iloc[0]['Time']
     df_overview_traded = df_overview[df_overview['Time'] == last_trade_time]
 
-    # get ETF info
+    # get ETF list
     etf_info_list = []
     get_etfs_list = investpy.etfs.get_etfs('united states')
 

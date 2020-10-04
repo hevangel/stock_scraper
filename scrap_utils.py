@@ -77,7 +77,7 @@ def get_session():
 # HTTP get request
 def get_url(url):
     response = get_scrapper().get(url, headers={'User-Agent': 'Mozilla/5.0'})
-    if not response:
+    if response.status_code != requests.codes.ok:
         print('Error', response.url, '- response code:', response.status_code)
         return None
     return response.text
@@ -85,7 +85,7 @@ def get_url(url):
 # HTTP post request
 def post_url(url,data):
     response = get_scrapper().post(url, data=data, headers={'User-Agent': 'Mozilla/5.0'})
-    if not response:
+    if response.status_code != requests.codes.ok:
         print('Error', response.url, '- response code:', response.status_code)
         return None
     return response.text

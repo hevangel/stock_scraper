@@ -22,7 +22,9 @@ def main():
     parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
 
-    args.input_file = 'data_tickers/etfs_info.csv'
+    args.input_file = 'data_tickers/all_stocks.csv'
+    args.output_dir = '../stock_data_local/raw_history_macrotrends_stock/'
+
     df_input = pd.read_csv(args.input_file)
     df_input.set_index('Ticker', inplace=True)
 

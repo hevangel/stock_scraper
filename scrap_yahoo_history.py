@@ -19,8 +19,8 @@ def main():
     parser.add_argument('-skip', type=int, help='skip tickers')
     args = parser.parse_args()
 
-    args.input_file = 'data_tickers/etfs_info.csv'
-    args.skip = 2282
+    args.input_file = 'data_tickers/all_stocks.csv'
+    args.output_dir = '../stock_data_local/raw_history_yahoo_stock/'
 
     if args.input_dir is not None:
         list_of_files = glob.glob(args.input_dir + '/*')
