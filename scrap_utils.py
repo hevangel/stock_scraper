@@ -93,11 +93,15 @@ def post_url(url,data):
 # get dataframe from table in page
 def get_df_from_page(page, table_index=0, header=0, index_col=0, drop_columns=None):
     soup = bs4.BeautifulSoup(page, 'lxml')
-    table = soup.find_all('table')[table_index]
-    df = pd.concat(pd.read_html(str(table), header=header, index_col=index_col))
-    if drop_columns is not None:
-        df.drop(columns=drop_columns, inplace=True)
-    return df
+    table_list = soup.find_all('table')
+    if bool(table_list):
+        table = table_list[table_index]
+        df = pd.concat(pd.read_html(str(table), header=header, index_col=index_col))
+        if drop_columns is not None:
+            df.drop(columns=drop_columns, inplace=True)
+        return df
+    else :
+        return None
 
 # check is the market closed today
 def is_market_close(date):

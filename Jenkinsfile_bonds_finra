@@ -22,6 +22,7 @@ pipeline {
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt --upgrade'
                     sh 'python3 scrap_bonds_finra.py -today'
+                    sh 'python3 scrap_short_finra.py'
                 }
             }
         }
@@ -31,6 +32,7 @@ pipeline {
                     sshagent (['git-hevangel']) {
                         sh 'git pull origin master'
                         sh 'git add raw_bonds_finra/*.csv'
+                        sh 'git add raw_dialy_short_finra/*.txt'
                         sh 'git commit --allow-empty -a -m "weekly scrap"'
                         sh 'git push origin HEAD:master'
                     }
