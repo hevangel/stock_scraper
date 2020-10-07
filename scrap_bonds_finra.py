@@ -70,7 +70,7 @@ def main():
     # scrap the data table
     columns = []
     row_data = []
-    while True:
+    while (total_page > 0):
         page_num = driver.find_element_by_class_name('qs-pageutil-input').get_attribute('value')
         print('page',page_num)
 
