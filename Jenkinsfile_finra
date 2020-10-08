@@ -45,7 +45,7 @@ pipeline {
                     sshagent (['git-hevangel']) {
                         sh 'git pull origin master'
                         sh 'git add raw_bonds_finra/*.csv'
-                        sh 'git add raw_dialy_short_finra/*.txt'
+                        sh 'git add raw_daily_short_finra/*.txt'
                         sh 'git commit --allow-empty -a -m "weekly scrap"'
                         sh 'git push origin HEAD:master'
                     }
