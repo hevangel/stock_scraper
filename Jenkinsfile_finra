@@ -27,8 +27,7 @@ pipeline {
         stage('scrap bonds') {
             steps {
                 withPythonEnv("${WORKSPACE}/venv/") {
-                    echo 'hello'
-                    // sh 'python3 scrap_bonds_finra.py -today'
+                    sh 'python3 scrap_bonds_finra.py -today'
                 }
             }
         }
