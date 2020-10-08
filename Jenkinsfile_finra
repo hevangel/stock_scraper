@@ -16,12 +16,24 @@ pipeline {
                 }
             }
         }
-        stage('scrap') {
+        stage('pip upgrade') {
             steps {
                 sh 'python3 -m venv --system-site-packages venv'
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt --upgrade'
-                    sh 'python3 scrap_bonds_finra.py -today'
+                }
+        }
+        stage('scrap bonds') {
+            steps {
+                withPythonEnv("${WORKSPACE}/venv/") {
+                    echo 'hello'
+                    // sh 'python3 scrap_bonds_finra.py -today'
+                }
+            }
+        }
+        stage('scrap short') {
+            steps {
+                withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'python3 scrap_short_finra.py'
                 }
             }
