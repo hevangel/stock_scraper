@@ -19,3 +19,4 @@ finviz
 yfinance
 investpy
 yahooquery
+tqdm
