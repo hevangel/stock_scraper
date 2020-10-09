@@ -25,6 +25,9 @@ pipeline {
             }
         }
         stage('scrap bonds') {
+            environment {
+                PATH = "/usr/local/bin:$PATH"
+            }
             steps {
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'python3 scrap_bonds_finra.py -today'
