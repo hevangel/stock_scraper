@@ -128,7 +128,7 @@ def main():
         df_pages = []
         driver.get('https://www.etf.com/etfanalytics/etf-finder')
         etfcom_click_understand_button()
-        #time.sleep(5)
+        time.sleep(5)
         driver_wait.until(EC.presence_of_all_elements_located((By.ID, 'inactiveResult')))
         driver_wait.until(EC.element_to_be_clickable((By.ID, 'inactiveResult')))
         button_100 = driver.find_elements_by_id('inactiveResult')[-1]
