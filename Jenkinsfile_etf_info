@@ -25,7 +25,7 @@ pipeline {
                 withPythonEnv("${WORKSPACE}/venv/") {
                     sh 'pip3 install -r requirements.txt --upgrade'
                     catchError {
-                        sh 'python scrap_etf_info.py -no_scrap_etfdb_info -no_scrap_etfcom_info'
+                        sh 'python scrap_etf_info.py -no_scrap_etfdb_info -no_scrap_etfcom_info -use_firefox -useheadless'
                     }
                     catchError {
                         sh 'python scrap_etf_info.py -no_scrap_etf_list -no_scrap_etfcom_info'
