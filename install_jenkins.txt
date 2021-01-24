@@ -26,6 +26,9 @@ Blue Ocean
 Pyenv
 SSH Agent
 
+# Setup NFS
+https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nfs-mount-on-ubuntu-20-04
+
 # Ngnix Setup
 sudo apt-get install nginx
 sudo iptables -I INPUT -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
